@@ -5,14 +5,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.io.IOException;
+import java.sql.Date;
+import java.sql.Time;
+import java.util.ArrayList;
+import com.example.ht2.BookingSystemContract.*;
 
 public class MainActivity extends AppCompatActivity {
     private Button button1;
     private Button button2;
     private Button button3;
+   // private Button testbutton;
+
+
+    public ArrayList<Club> listClub;
+    public ArrayList<Booker> listBooker;
+    public ArrayList<Sport> listSport;
+    public ArrayList<Room> listRoom;
+    public ArrayList<Equipment> listEquipment;
+    public ArrayList<Booking> listBooking;
+    public ArrayList<Person> listPerson;
+
+    public SQLiteDatabase mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 openMakeBooking();
             }
         });
-
         button3.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -43,6 +62,145 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        listClub = new ArrayList<Club>();
+        listBooker = new ArrayList<Booker>();
+        listSport = new ArrayList<Sport>();
+        listRoom = new ArrayList<Room>();
+        listEquipment = new ArrayList<Equipment>();
+        listBooking = new ArrayList<Booking>();
+        listPerson = new ArrayList<Person>();
+
+        try {
+            DataBaseHelper dbHelper = new DataBaseHelper(this);
+            mDatabase = dbHelper.getWritableDatabase();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        loadCursorToListClub(loadTableToCursor("Seura"));
+        loadCursorToListBooker(loadTableToCursor("Varaaja"));
+        loadCursorToListBooking(loadTableToCursor("Varaus"));
+        loadCursorToListEquipment(loadTableToCursor("Välineet"));
+        loadCursorToListSport(loadTableToCursor("Laji"));
+        loadCursorToListPerson(loadTableToCursor("Henkilö"));
+        loadCursorToListRoom(loadTableToCursor("Sali"));
+
+        /*testbutton = findViewById(R.id.testbutton);
+        testbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                testi();
+            }
+        });
+        */
+
+
+    }
+
+    /*public void testi(){
+        loadCursorToListClub(loadTableToCursor("Seura"));
+        System.out.println("Koko on " + listClub.size());
+
+        for (int i = 0; i <listClub.size(); i++) {
+            System.out.println(listClub.get(i).getName());
+        }
+    }
+    */
+
+    public void loadCursorToListClub(Cursor cursor){
+        if (cursor.moveToFirst()) {
+
+
+            do {int clubID = cursor.getInt(0);
+                String name = cursor.getString(1);
+                listClub.add(new Club(clubID, name));
+            } while (cursor.moveToNext());
+
+    }
+    }
+    public void loadCursorToListBooker(Cursor cursor){
+        if (cursor.moveToFirst()) {
+            do {
+                int bookerID = cursor.getInt(0);
+                int clubID = cursor.getInt(1);listBooker.add(new Booker(bookerID, clubID));
+            } while (cursor.moveToNext());
+
+        }
+    }
+    public void loadCursorToListSport(Cursor cursor){
+        if (cursor.moveToFirst()) {
+
+            do {int sportID = cursor.getInt(0);
+                String name = cursor.getString(1);
+                listSport.add(new Sport(sportID, name));
+            } while (cursor.moveToNext());
+
+        }
+    }
+    public void loadCursorToListRoom(Cursor cursor){
+        if (cursor.moveToFirst()) {
+
+            do {int roomID = cursor.getInt(0);
+                int sportID = cursor.getInt(1);
+                String name = cursor.getString(2);
+                listRoom.add(new Room(roomID, sportID, name));
+            } while (cursor.moveToNext());
+
+        }
+    }
+    public void loadCursorToListEquipment(Cursor cursor){
+        if (cursor.moveToFirst()) {
+
+            do {int equipmentID = cursor.getInt(0);
+                int roomID = cursor.getInt(1);
+                String name = cursor.getString(2);
+                listEquipment.add(new Equipment(equipmentID, roomID, name));
+            } while (cursor.moveToNext());
+
+        }
+    }
+    public void loadCursorToListBooking(Cursor cursor){
+        if (cursor.moveToFirst()) {
+
+            do {int bookingID = cursor.getInt(0);
+                int bookerID = cursor.getInt(1);
+                int roomID = cursor.getInt(2);
+                String startTime = cursor.getString(3);
+                String endTime = cursor.getString(4);
+                String date = cursor.getString(5);
+                listBooking.add(new Booking(bookingID, bookerID, roomID, startTime, endTime, date));
+            } while (cursor.moveToNext());
+
+        }
+    }
+    public void loadCursorToListPerson(Cursor cursor){
+        if (cursor.moveToFirst()) {
+            do {String name = cursor.getString(0);
+                String phoneNumber = cursor.getString(1);
+                int bookerID = cursor.getInt(2);
+                listPerson.add(new Person(name, phoneNumber, bookerID));
+            } while (cursor.moveToNext());
+
+        }
+    }
+
+
+
+
+
+    public Cursor loadTableToCursor(String tableName) {
+        DataBaseHelper myDBHelper = null;
+        try {
+            myDBHelper = new DataBaseHelper(MainActivity.this);
+            myDBHelper.createdatabase();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        myDBHelper.opendatabase();
+        Cursor cursor = myDBHelper.query(tableName, null, null, null, null, null, null);
+
+        return cursor;
     }
 
 

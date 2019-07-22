@@ -1,5 +1,6 @@
 package com.example.ht2;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -8,23 +9,21 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import com.example.ht2.BookingSystemContract.*;
 
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private final Context myContext;
-    private static String DB_NAME = "varausarjestelma.sql";
+    private static String DB_NAME = "uusi.sql";
     private static int DB_VERSION = 1;
     public SQLiteDatabase database;
     private String DB_PATH = null;
-    static final String CREATE_DB_TABLE =
-            " CREATE TABLE " + "Seura" +
-                    " (SeuraID INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    " Nimi TEXT NOT NULL);";
+    static String CREATE_DB_TABLE = null;
+
 
 
     public DataBaseHelper(Context context) throws IOException {
@@ -52,14 +51,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase checkdb = null;
         try {
             String myPath = DB_PATH + DB_NAME;
-            checkdb = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+            checkdb = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
         } catch(SQLiteException e) {
             System.out.println("Database doesn't exist");
         }
         if (checkdb != null){
             checkdb.close();
         }
-        return checkdb != null ? true : false;
+        return checkdb != null ;
     }
 
     private void copydatabase() throws IOException {
@@ -88,7 +87,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public void opendatabase() throws SQLException {
         //Open the database
         String mypath = DB_PATH + DB_NAME;
-        database = SQLiteDatabase.openDatabase(mypath, null, SQLiteDatabase.OPEN_READONLY);
+
+        database = SQLiteDatabase.openDatabase(mypath, null, SQLiteDatabase.OPEN_READWRITE);
     }
 
     public synchronized void close() {
@@ -98,10 +98,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         super.close();
     }
 
-        @Override
+    @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            database.execSQL(CREATE_DB_TABLE);
-            System.out.println("tääl oltiin");
+        CREATE_DB_TABLE = " CREATE TABLE " + "Seura" +
+                " (SeuraID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                " Nimi TEXT NOT NULL); ";
+        sqLiteDatabase.execSQL(CREATE_DB_TABLE);
+        System.out.println("tääl oltiin");
 
     }
 
@@ -114,8 +117,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 e.printStackTrace();
             }
     }
+
+
+    // Querys
     public Cursor query(String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy) {
+        SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM Seura", null);
         return cursor;
     }
+
+    // Insert
+
+
+
 }

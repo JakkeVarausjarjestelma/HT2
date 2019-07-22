@@ -2,7 +2,6 @@ package com.example.ht2;
 
 import android.provider.BaseColumns;
 
-
 public class BookingSystemContract {
 
     private BookingSystemContract() {}
