@@ -22,7 +22,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public SQLiteDatabase database;
     private String DB_PATH = null;
     static final String CREATE_DB_TABLE =
-            " CREATE TABLE IF NOT EXISTS " + "Seura" +
+            " CREATE TABLE " + "Seura" +
                     " (SeuraID INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     " Nimi TEXT NOT NULL);";
 
@@ -101,6 +101,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
             database.execSQL(CREATE_DB_TABLE);
+            System.out.println("tääl oltiin");
 
     }
 
