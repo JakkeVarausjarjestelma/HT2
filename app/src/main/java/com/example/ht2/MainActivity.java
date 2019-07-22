@@ -3,51 +3,82 @@ package com.example.ht2;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
-import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Spinner;
-
-import java.io.IOException;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    Context context;
-    DataBaseHelper dataBaseHelper;
-    private SQLiteDatabase database;
-    Spinner spinner;
-
+    private Button button1;
+    private Button button2;
+    private Button button3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BookingSystemDBHelper dbHelper = new BookingSystemDBHelper(this);
-        database = dbHelper.getWritableDatabase();
-        spinner.findViewById(R.id.spinner);
+        button1 = findViewById(R.id.button1);
+        button2 = findViewById(R.id.button2);
+        button3 = findViewById(R.id.button3);
 
+        button1.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                openCreateUser();
+            }
+        });
+        button2.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                openMakeBooking();
+            }
+        });
 
-        /*try {
-            dataBaseHelper = new DataBaseHelper(context);
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Eipä toimi");
-        }
-        */
+        button3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                openListBookings();
+            }
+        });
 
     }
-    public void write(View v){
+
+
+
+
+    public void openCreateUser(){
+        // Luo käyttäjä
+        Intent intent = new Intent(this, CreateUser.class);
+        startActivity(intent);
+    }
+
+    public void openMakeBooking(){
+        //  Tee varaus
+        Intent intent = new Intent(this, MakeBooking.class);
+        startActivity(intent);
+    }
+
+    public void openListBookings(){
+        //  Tee varaus
+        Intent intent = new Intent(this, ListBookings.class);
+        startActivity(intent);
+    }
+
+
+    /*public void write(){
         String s = "SaiPa";
         ContentValues cv = new ContentValues();
         cv.put(BookingSystemContract.SeuraEntry.COLUMN_NIMI, s);
         database.insert(BookingSystemContract.SeuraEntry.TABLE_NAME, null, cv);
         System.out.println("Kirjoitettu");
+        }
+        */
 
 
-    }
-    public void read(View v) {
+    /*
+    public void read() {
         System.out.println("Luetaan");
         Cursor cursor = database.rawQuery("SELECT * FROM " + BookingSystemContract.SeuraEntry.TABLE_NAME + ";", null);
         if (cursor != null) {
@@ -60,8 +91,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+    */
 
-    };
+};
 
 
 

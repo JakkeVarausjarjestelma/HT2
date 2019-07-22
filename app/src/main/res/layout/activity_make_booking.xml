@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MakeBooking">
+
+    <NumberPicker
+        android:id="@+id/np4"
+        android:layout_width="152dp"
+        android:layout_height="89dp"
+        android:layout_below="@id/tv"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/timePicker2"
+        app:layout_constraintTop_toBottomOf="@+id/np3"
+        app:layout_constraintVertical_bias="0.33"
+        tools:ignore="MissingConstraints" />
+
+    <NumberPicker
+        android:id="@+id/np3"
+        android:layout_width="131dp"
+        android:layout_height="105dp"
+        android:layout_below="@id/tv"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.92"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/np2"
+        app:layout_constraintVertical_bias="0.116"
+        tools:ignore="MissingConstraints" />
+
+    <NumberPicker
+        android:id="@+id/np2"
+        android:layout_width="162dp"
+        android:layout_height="88dp"
+        android:layout_below="@id/tv2"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/np"
+        app:layout_constraintVertical_bias="0.047"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Valitse päivämäärä"
+        android:textSize="25dp"
+        tools:ignore="MissingConstraints" />
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25dp"
+
+        tools:ignore="MissingConstraints" />
+
+    <NumberPicker
+        android:id="@+id/np"
+        android:layout_width="40dp"
+        android:layout_height="115dp"
+        android:layout_below="@id/tv"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="28dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.475"
+        app:layout_constraintStart_toEndOf="@+id/datePicker2"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        tools:ignore="MissingConstraints" />
+
+    <DatePicker
+        android:id="@+id/datePicker3"
+        android:layout_width="241dp"
+        android:layout_height="204dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner"
+        app:layout_constraintBottom_toTopOf="@+id/datePicker2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.407"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
+
+
+    <TimePicker
+        android:id="@+id/timePicker2"
+        android:layout_width="225dp"
+        android:layout_height="188dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="4dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="5dp" />
+
+    <TimePicker
+        android:id="@+id/timePicker"
+        android:layout_width="231dp"
+        android:layout_height="181dp"
+        android:layout_marginTop="8dp"
+        android:fadeScrollbars="false"
+        android:timePickerMode="spinner"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="5dp" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="#F5256C"
+        android:text="Varaa"
+        android:textColor="#FAF7F8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.896"
+        app:layout_constraintStart_toEndOf="@+id/datePicker1"
+        app:layout_constraintTop_toBottomOf="@+id/np4"
+        app:layout_constraintVertical_bias="0.95" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Aloitusaika"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/datePicker3" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Lopetusaika"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Kertojen määrä"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
