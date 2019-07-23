@@ -55,4 +55,9 @@ public class Sport implements Parcelable {
         parcel.writeInt(sportID);
         parcel.writeString(name);
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

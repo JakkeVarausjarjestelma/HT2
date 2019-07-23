@@ -107,7 +107,7 @@ public class ListBookings extends AppCompatActivity {
 
         tv.setTextColor(Color.parseColor("#EC7469"));
 
-        ArrayAdapter<Club> adapter = new ArrayAdapter<Club>(this, android.R.layout.simple_spinner_item);
+        ArrayAdapter<Club> adapter = new ArrayAdapter<Club>(this, android.R.layout.simple_spinner_item, listClub);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 

@@ -67,4 +67,8 @@ public class Person implements Parcelable {
         parcel.writeString(phoneNumber);
         parcel.writeInt(bookerID);
     }
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }

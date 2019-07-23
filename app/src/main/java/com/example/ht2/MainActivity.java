@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -32,11 +33,37 @@ public class MainActivity extends AppCompatActivity {
     public ArrayList<Person> listPerson;
 
     public SQLiteDatabase mDatabase;
+    public SQLiteDatabase db;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        listClub = new ArrayList<Club>();
+        listBooker = new ArrayList<Booker>();
+        listSport = new ArrayList<Sport>();
+        listRoom = new ArrayList<Room>();
+        listEquipment = new ArrayList<Equipment>();
+        listBooking = new ArrayList<Booking>();
+        listPerson = new ArrayList<Person>();
+
+        try {
+            DataBaseHelper DBHelper = new DataBaseHelper(MainActivity.this);
+            db = DBHelper.getWritableDatabase();
+            boolean i = DBHelper.checkdatabase();
+            if (i == true) {
+                System.out.println("Tyhjä db");
+                insertBeginValues(db);
+            } else {System.out.println("on jo db");}
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
@@ -81,23 +108,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listClub = new ArrayList<Club>();
-        listBooker = new ArrayList<Booker>();
-        listSport = new ArrayList<Sport>();
-        listRoom = new ArrayList<Room>();
-        listEquipment = new ArrayList<Equipment>();
-        listBooking = new ArrayList<Booking>();
-        listPerson = new ArrayList<Person>();
+
 
         try {
             DataBaseHelper dbHelper = new DataBaseHelper(this);
             mDatabase = dbHelper.getWritableDatabase();
+
             //insertValuesToClub(mDatabase, 0, "Yksityinen");
             //listClub.add(new Club(0, "Yksityinen"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        /*
         loadCursorToListClub(loadTableToCursor(ClubEntry.TABLE_NAME));
         loadCursorToListBooker(loadTableToCursor(BookerEntry.TABLE_NAME));
         loadCursorToListBooking(loadTableToCursor(BookingEntry.TABLE_NAME));
@@ -105,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
         loadCursorToListSport(loadTableToCursor(SportEntry.TABLE_NAME));
         loadCursorToListPerson(loadTableToCursor(PersonEntry.TABLE_NAME));
         loadCursorToListRoom(loadTableToCursor(RoomEntry.TABLE_NAME));
+        */
+
 
         /*testbutton = findViewById(R.id.testbutton);
         testbutton.setOnClickListener(new View.OnClickListener() {
@@ -184,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
     public void loadCursorToListBooking(Cursor cursor){
         if (cursor.moveToFirst()) {
 
+            System.out.println(cursor.getCount());
             do {int bookingID = cursor.getInt(0);
                 int bookerID = cursor.getInt(1);
                 int roomID = cursor.getInt(2);
@@ -260,6 +286,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void insertBeginValues(SQLiteDatabase db){
+        insertValuesToClub(db, 0, "Pesäysit" );
+        insertValuesToClub(db, 1, "Fera" );
+        insertValuesToBooker(db, 0, 0);
+        insertValuesToPerson(db, 0, "Lantta", "314159");
+        insertValuesToSport(db, 0, "Pesis");
+        insertValuesToRoom(db, 0,0, "Vanhis");
+        insertValuesToEquipment(db, 0, 0, "Pesisvälineet");
+        //insertValuesToBooking(db, 0, 0, 0, "0800", "1000", "24072019");
+
+
+
+    }
+
 
     /*public void write(){
         String s = "SaiPa";
@@ -291,6 +331,63 @@ public class MainActivity extends AppCompatActivity {
         cv.put(ClubEntry.COLUMN_NAME, name);
         cv.put(ClubEntry.COLUMN_CLUBID, id);
         sqLiteDatabase.insert(ClubEntry.TABLE_NAME, null, cv);
+    }
+
+
+        //String sql = "INSERT INTO Seura VALUES( " + id + " , " + name + " );";
+        //sqLiteDatabase.execSQL(sql);
+
+    public void insertValuesToBooker(SQLiteDatabase sqLiteDatabase, int id, int clubID){
+        ContentValues cv = new ContentValues();
+        cv.put(BookerEntry.COLUMN_BOOKERID, id);
+        cv.put(BookerEntry.COLUMN_CLUBID, clubID);
+        listBooker.add(new Booker(id, clubID));
+        sqLiteDatabase.insert(BookerEntry.TABLE_NAME, null, cv);
+    }
+    public void insertValuesToSport(SQLiteDatabase sqLiteDatabase, int id, String name){
+        ContentValues cv = new ContentValues();
+        cv.put(SportEntry.COLUMN_NAME, name);
+        cv.put(SportEntry.COLUMN_SPORTID, id);
+        listSport.add(new Sport(id, name));
+        sqLiteDatabase.insert(SportEntry.TABLE_NAME, null, cv);
+    }
+
+    public void insertValuesToRoom(SQLiteDatabase sqLiteDatabase, int id, int SportID, String name){
+        ContentValues cv = new ContentValues();
+        cv.put(RoomEntry.COLUMN_NAME, name);
+        cv.put(RoomEntry.COLUMN_SPORTID, SportID);
+        cv.put(RoomEntry.COLUMN_ROOMID, id);
+        listRoom.add(new Room(id, SportID, name));
+        sqLiteDatabase.insert(RoomEntry.TABLE_NAME, null, cv);
+    }
+
+    public void insertValuesToEquipment(SQLiteDatabase sqLiteDatabase, int id, int RoomID, String name) {
+        ContentValues cv = new ContentValues();
+        cv.put(EquipmentEntry.COLUMN_EQUIPMENTID, id);
+        cv.put(EquipmentEntry.COLUMN_ROOMID, RoomID);
+        cv.put(EquipmentEntry.COLUMN_NAME, name);
+        listEquipment.add(new Equipment(id, RoomID, name));
+        sqLiteDatabase.insert(RoomEntry.TABLE_NAME, null, cv);
+    }
+    public void insertValuesToBooking(SQLiteDatabase sqLiteDatabase, int id, int bookerID, int RoomID, String startime, String endtime, String date){
+        ContentValues cv = new ContentValues();
+        cv.put(BookingEntry.COLUMN_BOOKINGID, id);
+        cv.put(BookingEntry.COLUMN_BOOKERID, bookerID);
+        cv.put(BookingEntry.COLUMN_ROOMID, RoomID);
+        cv.put(BookingEntry.COLUMN_STARTTIME, startime);
+        cv.put(BookingEntry.COLUMN_ENDTIME, endtime);
+        cv.put(BookingEntry.COLUMN_DATE, date);
+        listBooking.add(new Booking(id, bookerID, RoomID, startime, endtime, date));
+        sqLiteDatabase.insert(BookingEntry.TABLE_NAME, null, cv);
+    }
+    public void insertValuesToPerson(SQLiteDatabase sqLiteDatabase, int bookerID, String name, String phonenumber) {
+        ContentValues cv = new ContentValues();
+        cv.put(PersonEntry.COLUMN_BOOKERID, bookerID);
+        cv.put(PersonEntry.COLUMN_NAME, name);
+        cv.put(PersonEntry.COLUMN_PHONENUMBER, phonenumber);
+        listPerson.add(new Person(name, phonenumber, bookerID));
+        sqLiteDatabase.insert(PersonEntry.TABLE_NAME, null, cv);
+
     }
 
 };

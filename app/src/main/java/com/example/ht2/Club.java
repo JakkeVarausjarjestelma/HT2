@@ -58,4 +58,8 @@ public class Club implements Parcelable {
         parcel.writeInt(clubID);
         parcel.writeString(name);
     }
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
