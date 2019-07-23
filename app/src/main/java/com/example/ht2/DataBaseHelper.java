@@ -18,7 +18,7 @@ import com.example.ht2.BookingSystemContract.*;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private final Context myContext;
-    private static String DB_NAME = "varastussdfasdsedsdfsdasdf.sql";
+    private static String DB_NAME = "varastussdfasdsedasdasdasdsdfsdfsdfsdasdf.sql";
     private static int DB_VERSION = 1;
     public SQLiteDatabase database;
     private String DB_PATH = null;

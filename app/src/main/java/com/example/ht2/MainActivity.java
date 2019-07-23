@@ -51,7 +51,9 @@ public class MainActivity extends AppCompatActivity {
                     DataBaseHelper dbHelper = new DataBaseHelper(MainActivity.this);
                     mDatabase = dbHelper.getWritableDatabase();
                     insertValuesToClub(mDatabase, listClub.size(), "Yksityinen");
-                    listClub.add(new Club(0, "Yksityinen"));
+                    Cursor c = loadTableToCursor(ClubEntry.TABLE_NAME);
+                    loadCursorToListClub(c);
+
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -228,29 +230,34 @@ public class MainActivity extends AppCompatActivity {
 
     public void openCreateUser(){
         // Luo käyttäjä
-        Intent intent = new Intent(this, CreateUser.class);
+        Intent intent = getAllListIntents(CreateUser.class);
         startActivity(intent);
     }
 
     public void openMakeBooking(){
         //  Tee varaus
-        Intent intent = new Intent(this, MakeBooking.class);
+        Intent intent = getAllListIntents(MakeBooking.class);
         startActivity(intent);
     }
 
     public void openListBookings(){
         //  Tee varaus
 
-        Intent intent = new Intent(this, ListBookings.class);
-
-        intent.putParcelableArrayListExtra("Club", listClub);
-        intent.putExtra("Sport", listSport);
-        intent.putExtra("Room", listRoom);
-        intent.putExtra("Person", listPerson);
-        intent.putExtra("Equipment", listEquipment);
-        intent.putExtra("Booker", listBooker);
-        intent.putExtra("Booking", listBooking);
+        Intent intent = getAllListIntents(ListBookings.class);
         startActivity(intent);
+    }
+
+    public Intent getAllListIntents(Class<?> cls){
+        Intent intent = new Intent(this, cls);
+        intent.putParcelableArrayListExtra("Club", listClub);
+        intent.putParcelableArrayListExtra("Sport", listSport);
+        intent.putParcelableArrayListExtra("Room", listRoom);
+        intent.putParcelableArrayListExtra("Person", listPerson);
+        intent.putParcelableArrayListExtra("Equipment", listEquipment);
+        intent.putParcelableArrayListExtra("Booker", listBooker);
+        intent.putParcelableArrayListExtra("Booking", listBooking);
+        return intent;
+
     }
 
 
@@ -285,7 +292,6 @@ public class MainActivity extends AppCompatActivity {
         cv.put(ClubEntry.COLUMN_CLUBID, id);
         sqLiteDatabase.insert(ClubEntry.TABLE_NAME, null, cv);
     }
-
 
 };
 

@@ -1,15 +1,39 @@
 package com.example.ht2;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.sql.Date;
 import java.sql.Time;
 
-public class Booking {
+public class Booking implements Parcelable {
     private int bookingID;
     private int bookerID;
     private int roomID;
     private String startTime;
     private String endTime;
     private String date;
+
+    protected Booking(Parcel in) {
+        bookingID = in.readInt();
+        bookerID = in.readInt();
+        roomID = in.readInt();
+        startTime = in.readString();
+        endTime = in.readString();
+        date = in.readString();
+    }
+
+    public static final Creator<Booking> CREATOR = new Creator<Booking>() {
+        @Override
+        public Booking createFromParcel(Parcel in) {
+            return new Booking(in);
+        }
+
+        @Override
+        public Booking[] newArray(int size) {
+            return new Booking[size];
+        }
+    };
 
     public int getBookingID() {
         return bookingID;
@@ -70,6 +94,18 @@ public class Booking {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
-
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(bookingID);
+        parcel.writeInt(bookerID);
+        parcel.writeInt(roomID);
+        parcel.writeString(startTime);
+        parcel.writeString(endTime);
+        parcel.writeString(date);
+    }
 }

@@ -1,9 +1,30 @@
 package com.example.ht2;
 
-public class Person {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Person implements Parcelable {
     private String name;
     private String phoneNumber;
     private int bookerID;
+
+    protected Person(Parcel in) {
+        name = in.readString();
+        phoneNumber = in.readString();
+        bookerID = in.readInt();
+    }
+
+    public static final Creator<Person> CREATOR = new Creator<Person>() {
+        @Override
+        public Person createFromParcel(Parcel in) {
+            return new Person(in);
+        }
+
+        @Override
+        public Person[] newArray(int size) {
+            return new Person[size];
+        }
+    };
 
     public String getName(){
         return name;
@@ -33,5 +54,17 @@ public class Person {
         this.bookerID = bookerID;
         this.phoneNumber = phoneNumber;
         this.name = name;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(phoneNumber);
+        parcel.writeInt(bookerID);
     }
 }

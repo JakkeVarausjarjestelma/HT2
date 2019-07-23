@@ -47,25 +47,25 @@ public class ListBookings extends AppCompatActivity {
         spinner3 = findViewById(R.id.spinner3);
 
         Intent intent = getIntent();
-        final ArrayList ClubList = intent.getParcelableArrayListExtra("Club");
+        final ArrayList listClub = intent.getParcelableArrayListExtra("Club");
 
         Bundle bundle2 = getIntent().getExtras();
-        ArrayList SportList = bundle2.getParcelableArrayList("Sport");
+        ArrayList listSport = bundle2.getParcelableArrayList("Sport");
 
         Bundle bundle3= getIntent().getExtras();
-        ArrayList RoomList = bundle3.getParcelableArrayList("Room");
+        ArrayList listRoom = bundle3.getParcelableArrayList("Room");
 
         Bundle bundle4 = getIntent().getExtras();
-        ArrayList PersonList = bundle4.getParcelableArrayList("Person");
+        ArrayList listPerson = bundle4.getParcelableArrayList("Person");
 
         Bundle bundle5 = getIntent().getExtras();
-        ArrayList EquipmentList = bundle5.getParcelableArrayList("Equipment");
+        ArrayList listEquipment = bundle5.getParcelableArrayList("Equipment");
 
         Bundle bundle6 = getIntent().getExtras();
-        ArrayList BookerList = bundle6.getParcelableArrayList("Booker");
+        ArrayList listBooker = bundle6.getParcelableArrayList("Booker");
 
         Bundle bundle7 = getIntent().getExtras();
-        ArrayList BookingList = bundle7.getParcelableArrayList("Booking");
+        ArrayList listBooking = bundle7.getParcelableArrayList("Booking");
 
 
 
@@ -73,7 +73,7 @@ public class ListBookings extends AppCompatActivity {
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(ClubList.size());
+                System.out.println(listClub.size());
             }
         });
 
@@ -114,11 +114,11 @@ public class ListBookings extends AppCompatActivity {
         //@Override
         //public void onItemSelected(AdapterView<?> parent, View view, int position, long Club club = (Club) parent.getSelectedItem();
 
-        ArrayAdapter<Sport> adapter2 = new ArrayAdapter<Sport>(this, android.R.layout.simple_spinner_item, SportList);
+        ArrayAdapter<Sport> adapter2 = new ArrayAdapter<Sport>(this, android.R.layout.simple_spinner_item, listSport);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner2.setAdapter(adapter2);
 
-        ArrayAdapter<Person> adapter3 = new ArrayAdapter<Person>(this, android.R.layout.simple_spinner_item, PersonList);
+        ArrayAdapter<Person> adapter3 = new ArrayAdapter<Person>(this, android.R.layout.simple_spinner_item, listPerson);
         adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner3.setAdapter(adapter3);
 
