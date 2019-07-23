@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                     DataBaseHelper dbHelper = new DataBaseHelper(MainActivity.this);
                     mDatabase = dbHelper.getWritableDatabase();
                     insertValuesToClub(mDatabase, listClub.size(), "Yksityinen");
+                    listClub.add(new Club(0, "Yksityinen"));
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             DataBaseHelper dbHelper = new DataBaseHelper(this);
             mDatabase = dbHelper.getWritableDatabase();
             //insertValuesToClub(mDatabase, 0, "Yksityinen");
+            //listClub.add(new Club(0, "Yksityinen"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -241,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, ListBookings.class);
 
-        intent.putExtra("Club", listClub);
+        intent.putParcelableArrayListExtra("Club", listClub);
         intent.putExtra("Sport", listSport);
         intent.putExtra("Room", listRoom);
         intent.putExtra("Person", listPerson);

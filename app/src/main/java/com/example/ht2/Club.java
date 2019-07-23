@@ -1,6 +1,9 @@
 package com.example.ht2;
 
-public class Club {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Club implements Parcelable {
     private int clubID;
     private String name;
 
@@ -25,4 +28,34 @@ public class Club {
         this.name = name;
     }
 
+
+    protected Club(Parcel in) {
+        clubID = in.readInt();
+        name = in.readString();
+    }
+
+    public static final Creator<Club> CREATOR = new Creator<Club>() {
+        @Override
+        public Club createFromParcel(Parcel in) {
+            return new Club(in);
+        }
+
+        @Override
+        public Club[] newArray(int size) {
+            return new Club[size];
+        }
+    };
+
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(clubID);
+        parcel.writeString(name);
+    }
 }
