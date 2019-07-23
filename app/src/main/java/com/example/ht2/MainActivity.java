@@ -21,8 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private Button button1;
     private Button button2;
     private Button button3;
-   // private Button testbutton;
-
+    private Button testbutton;
 
     public ArrayList<Club> listClub;
     public ArrayList<Booker> listBooker;
@@ -42,6 +41,23 @@ public class MainActivity extends AppCompatActivity {
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
+
+        testbutton = findViewById(R.id.testbutton);
+
+        testbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try {
+                    DataBaseHelper dbHelper = new DataBaseHelper(MainActivity.this);
+                    mDatabase = dbHelper.getWritableDatabase();
+                    insertValuesToClub(mDatabase, listClub.size(), "Yksityinen");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                System.out.println(listClub.size());
+            }
+        });
 
         button1.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -73,17 +89,18 @@ public class MainActivity extends AppCompatActivity {
         try {
             DataBaseHelper dbHelper = new DataBaseHelper(this);
             mDatabase = dbHelper.getWritableDatabase();
+            //insertValuesToClub(mDatabase, 0, "Yksityinen");
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        loadCursorToListClub(loadTableToCursor("Seura"));
-        loadCursorToListBooker(loadTableToCursor("Varaaja"));
-        loadCursorToListBooking(loadTableToCursor("Varaus"));
-        loadCursorToListEquipment(loadTableToCursor("Välineet"));
-        loadCursorToListSport(loadTableToCursor("Laji"));
-        loadCursorToListPerson(loadTableToCursor("Henkilö"));
-        loadCursorToListRoom(loadTableToCursor("Sali"));
+        loadCursorToListClub(loadTableToCursor(ClubEntry.TABLE_NAME));
+        loadCursorToListBooker(loadTableToCursor(BookerEntry.TABLE_NAME));
+        loadCursorToListBooking(loadTableToCursor(BookingEntry.TABLE_NAME));
+        loadCursorToListEquipment(loadTableToCursor(EquipmentEntry.TABLE_NAME));
+        loadCursorToListSport(loadTableToCursor(SportEntry.TABLE_NAME));
+        loadCursorToListPerson(loadTableToCursor(PersonEntry.TABLE_NAME));
+        loadCursorToListRoom(loadTableToCursor(RoomEntry.TABLE_NAME));
 
         /*testbutton = findViewById(R.id.testbutton);
         testbutton.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +127,9 @@ public class MainActivity extends AppCompatActivity {
     public void loadCursorToListClub(Cursor cursor){
         if (cursor.moveToFirst()) {
 
-
             do {int clubID = cursor.getInt(0);
                 String name = cursor.getString(1);
+                System.out.println(name);
                 listClub.add(new Club(clubID, name));
             } while (cursor.moveToNext());
 
@@ -122,7 +139,8 @@ public class MainActivity extends AppCompatActivity {
         if (cursor.moveToFirst()) {
             do {
                 int bookerID = cursor.getInt(0);
-                int clubID = cursor.getInt(1);listBooker.add(new Booker(bookerID, clubID));
+                int clubID = cursor.getInt(1);
+                listBooker.add(new Booker(bookerID, clubID));
             } while (cursor.moveToNext());
 
         }
@@ -220,7 +238,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void openListBookings(){
         //  Tee varaus
+
         Intent intent = new Intent(this, ListBookings.class);
+
+        intent.putExtra("Club", listClub);
+        intent.putExtra("Sport", listSport);
+        intent.putExtra("Room", listRoom);
+        intent.putExtra("Person", listPerson);
+        intent.putExtra("Equipment", listEquipment);
+        intent.putExtra("Booker", listBooker);
+        intent.putExtra("Booking", listBooking);
         startActivity(intent);
     }
 
@@ -249,7 +276,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-    */
+*/
+    public void insertValuesToClub(SQLiteDatabase sqLiteDatabase, int id, String name){
+        ContentValues cv = new ContentValues();
+        cv.put(ClubEntry.COLUMN_NAME, name);
+        cv.put(ClubEntry.COLUMN_CLUBID, id);
+        sqLiteDatabase.insert(ClubEntry.TABLE_NAME, null, cv);
+    }
+
 
 };
 
