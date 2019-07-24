@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.audiofx.DynamicsProcessing;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.View;
@@ -291,10 +292,12 @@ public class MainActivity extends AppCompatActivity {
         insertValuesToClub(db, 1, "Fera" );
         insertValuesToBooker(db, 0, 0);
         insertValuesToPerson(db, 0, "Lantta", "314159");
+        insertValuesToPerson(db, 1, "Aleksi", "314159");
         insertValuesToSport(db, 0, "Pesis");
+        insertValuesToSport(db, 1, "Futis");
         insertValuesToRoom(db, 0,0, "Vanhis");
         insertValuesToEquipment(db, 0, 0, "Pesisvälineet");
-        //insertValuesToBooking(db, 0, 0, 0, "0800", "1000", "24072019");
+        insertValuesToBooking(db, 0, 0, 0, "0800", "1000", "24072019");
 
 
 
@@ -330,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         ContentValues cv = new ContentValues();
         cv.put(ClubEntry.COLUMN_NAME, name);
         cv.put(ClubEntry.COLUMN_CLUBID, id);
-        sqLiteDatabase.insert(ClubEntry.TABLE_NAME, null, cv);
+        sqLiteDatabase.insert("'"+ClubEntry.TABLE_NAME+"'", null, cv);
     }
 
 
@@ -342,23 +345,24 @@ public class MainActivity extends AppCompatActivity {
         cv.put(BookerEntry.COLUMN_BOOKERID, id);
         cv.put(BookerEntry.COLUMN_CLUBID, clubID);
         listBooker.add(new Booker(id, clubID));
-        sqLiteDatabase.insert(BookerEntry.TABLE_NAME, null, cv);
+        sqLiteDatabase.insert("'" +BookerEntry.TABLE_NAME+"'", null, cv);
     }
     public void insertValuesToSport(SQLiteDatabase sqLiteDatabase, int id, String name){
         ContentValues cv = new ContentValues();
         cv.put(SportEntry.COLUMN_NAME, name);
         cv.put(SportEntry.COLUMN_SPORTID, id);
         listSport.add(new Sport(id, name));
-        sqLiteDatabase.insert(SportEntry.TABLE_NAME, null, cv);
+        sqLiteDatabase.insert("'" +SportEntry.TABLE_NAME+ "'", null, cv);
     }
 
     public void insertValuesToRoom(SQLiteDatabase sqLiteDatabase, int id, int SportID, String name){
         ContentValues cv = new ContentValues();
+        cv.put(RoomEntry.COLUMN_ROOMID, id);
         cv.put(RoomEntry.COLUMN_NAME, name);
         cv.put(RoomEntry.COLUMN_SPORTID, SportID);
-        cv.put(RoomEntry.COLUMN_ROOMID, id);
+
         listRoom.add(new Room(id, SportID, name));
-        sqLiteDatabase.insert(RoomEntry.TABLE_NAME, null, cv);
+        sqLiteDatabase.insert("'"+RoomEntry.TABLE_NAME+"'", null, cv);
     }
 
     public void insertValuesToEquipment(SQLiteDatabase sqLiteDatabase, int id, int RoomID, String name) {
@@ -367,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
         cv.put(EquipmentEntry.COLUMN_ROOMID, RoomID);
         cv.put(EquipmentEntry.COLUMN_NAME, name);
         listEquipment.add(new Equipment(id, RoomID, name));
-        sqLiteDatabase.insert(RoomEntry.TABLE_NAME, null, cv);
+        sqLiteDatabase.insert("'"+ EquipmentEntry.TABLE_NAME+"'", null, cv);
     }
     public void insertValuesToBooking(SQLiteDatabase sqLiteDatabase, int id, int bookerID, int RoomID, String startime, String endtime, String date){
         ContentValues cv = new ContentValues();
@@ -378,7 +382,7 @@ public class MainActivity extends AppCompatActivity {
         cv.put(BookingEntry.COLUMN_ENDTIME, endtime);
         cv.put(BookingEntry.COLUMN_DATE, date);
         listBooking.add(new Booking(id, bookerID, RoomID, startime, endtime, date));
-        sqLiteDatabase.insert(BookingEntry.TABLE_NAME, null, cv);
+        sqLiteDatabase.insert("'"+BookingEntry.TABLE_NAME+"'", null, cv);
     }
     public void insertValuesToPerson(SQLiteDatabase sqLiteDatabase, int bookerID, String name, String phonenumber) {
         ContentValues cv = new ContentValues();
@@ -386,7 +390,7 @@ public class MainActivity extends AppCompatActivity {
         cv.put(PersonEntry.COLUMN_NAME, name);
         cv.put(PersonEntry.COLUMN_PHONENUMBER, phonenumber);
         listPerson.add(new Person(name, phonenumber, bookerID));
-        sqLiteDatabase.insert(PersonEntry.TABLE_NAME, null, cv);
+        sqLiteDatabase.insert("'"+PersonEntry.TABLE_NAME+"'", null, cv);
 
     }
 

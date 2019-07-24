@@ -18,7 +18,7 @@ import com.example.ht2.BookingSystemContract.*;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private final Context myContext;
-    private static String DB_NAME = "varassdsdffxdcfxcvtujssdfdzxcssddfasdsesaddsfsdfdassdfsdfsdfdasdasddasdsdfsdasdfsdfsSDFGdasdf.sql";
+    private static String DB_NAME = "varadxdcfdsfkjhgadsdfxdsasdvalilyyontifjdxcvtujssdfsdfdzxfcssddfasdsesaddsfsdfdassdfsdfsdfdasdasddasdsdfsdasdfsdfsSDFGdasdf.sql";
     private static int DB_VERSION = 1;
     public SQLiteDatabase database;
     private String DB_PATH = null;
@@ -104,32 +104,37 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         CREATE_DB_TABLE = " CREATE TABLE IF NOT EXISTS " + ClubEntry.TABLE_NAME + " (" +
                 ClubEntry.COLUMN_CLUBID +" INTEGER PRIMARY KEY, " +
                 ClubEntry.COLUMN_NAME + " TEXT);";
-        CREATE_OTHER_DB_TABLES = CREATE_DB_TABLE +
+        sqLiteDatabase.execSQL(CREATE_DB_TABLE );
+        CREATE_OTHER_DB_TABLES =
                 " CREATE TABLE IF NOT EXISTS " + BookerEntry.TABLE_NAME + " (" +
                 BookerEntry.COLUMN_BOOKERID +" INTEGER PRIMARY KEY, " +
                 BookerEntry.COLUMN_CLUBID + " INTEGER, " +
                 " FOREIGN KEY ("+BookerEntry.COLUMN_CLUBID+") REFERENCES "+ ClubEntry.TABLE_NAME+"("+ClubEntry.COLUMN_CLUBID+"));";
         // Sport
-        CREATE_OTHER_DB_TABLES = CREATE_OTHER_DB_TABLES +
+        sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
+        CREATE_OTHER_DB_TABLES =
                 " CREATE TABLE IF NOT EXISTS " + SportEntry.TABLE_NAME + " (" +
                 SportEntry.COLUMN_SPORTID +" INTEGER PRIMARY KEY, " +
                 SportEntry.COLUMN_NAME + " TEXT);";
         // Room
-        CREATE_OTHER_DB_TABLES = CREATE_OTHER_DB_TABLES +
+        sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
+        CREATE_OTHER_DB_TABLES =
                 " CREATE TABLE IF NOT EXISTS " + RoomEntry.TABLE_NAME + " (" +
                 RoomEntry.COLUMN_ROOMID +" INTEGER PRIMARY KEY, " +
                 RoomEntry.COLUMN_SPORTID + " INTEGER, " +
-                RoomEntry.COLUMN_NAME + "TEXT," +
+                RoomEntry.COLUMN_NAME + " TEXT," +
                 " FOREIGN KEY ("+RoomEntry.COLUMN_SPORTID+") REFERENCES "+ SportEntry.TABLE_NAME+"("+SportEntry.COLUMN_SPORTID+"));";
         // Equipment
-        CREATE_OTHER_DB_TABLES = CREATE_OTHER_DB_TABLES +
+        sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
+        CREATE_OTHER_DB_TABLES =
                 " CREATE TABLE IF NOT EXISTS " + EquipmentEntry.TABLE_NAME + " (" +
                 EquipmentEntry.COLUMN_EQUIPMENTID +" INTEGER PRIMARY KEY, " +
                 EquipmentEntry.COLUMN_ROOMID + " INTEGER, " +
-                EquipmentEntry.COLUMN_NAME + "TEXT," +
+                EquipmentEntry.COLUMN_NAME + " TEXT," +
                 " FOREIGN KEY ("+EquipmentEntry.COLUMN_ROOMID+") REFERENCES "+ RoomEntry.TABLE_NAME+"("+RoomEntry.COLUMN_ROOMID+"));";
         // Booking
-        CREATE_OTHER_DB_TABLES = CREATE_OTHER_DB_TABLES +
+        sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
+        CREATE_OTHER_DB_TABLES =
                 " CREATE TABLE IF NOT EXISTS " + BookingEntry.TABLE_NAME + " (" +
                 BookingEntry.COLUMN_BOOKINGID+" INTEGER PRIMARY KEY, " +
                 BookingEntry.COLUMN_BOOKERID + " INTEGER, " +
@@ -141,12 +146,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY ("+BookingEntry.COLUMN_BOOKERID+") REFERENCES "+ BookerEntry.TABLE_NAME+"("+BookerEntry.COLUMN_BOOKERID+"));";
 
         // Person
-        CREATE_OTHER_DB_TABLES = CREATE_OTHER_DB_TABLES +
+        sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
+        CREATE_OTHER_DB_TABLES =
                 " CREATE TABLE IF NOT EXISTS " + PersonEntry.TABLE_NAME + " (" +
                 PersonEntry.COLUMN_NAME + " VARCHAR(64), " +
                 PersonEntry.COLUMN_BOOKERID +" INTEGER PRIMARY KEY, " +
                 PersonEntry.COLUMN_PHONENUMBER + " VARCHAR(64)," +
-                " FOREIGN KEY ("+PersonEntry.COLUMN_BOOKERID+") REFERENCES "+ BookerEntry.TABLE_NAME+"("+BookerEntry.COLUMN_BOOKERID+"),);";
+                " FOREIGN KEY ("+PersonEntry.COLUMN_BOOKERID+") REFERENCES "+ BookerEntry.TABLE_NAME+"("+BookerEntry.COLUMN_BOOKERID+"));";
         /*CREATE_OTHER_DB_TABLES = CREATE_OTHER_DB_TABLES +
                 "INSERT INTO "+ ClubEntry.TABLE_NAME +" VALUES(0, Moikkeli);" +
                 "INSERT INTO "+ BookerEntry.TABLE_NAME +" VALUES(0, 0);" +
@@ -158,6 +164,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 */
 
         sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
+        /* Cursor c = sqLiteDatabase.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
+        if (c.moveToFirst()) {
+            while ( !c.isAfterLast() ) {
+                System.out.println(c.getString(0));
+                c.moveToNext();
+            }
+        }
+        */
 
     }
 
@@ -298,10 +313,4 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(PersonEntry.COLUMN_PHONENUMBER, phonenumber);
 
     }
-
-
-
-
-
-
 }

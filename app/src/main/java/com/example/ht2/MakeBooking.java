@@ -22,9 +22,9 @@ public class MakeBooking extends AppCompatActivity {
 
 
 
-        datePicker = findViewById(R.id.datePicker3);
-        timePicker1 = findViewById(R.id.timePicker);
-        timePicker2 = findViewById(R.id.timePicker2);
+        //datePicker = findViewById(R.id.datePicker3);
+        //timePicker1 = findViewById(R.id.timePicker);
+        //timePicker2 = findViewById(R.id.timePicker2);
 
 
 
@@ -33,18 +33,18 @@ public class MakeBooking extends AppCompatActivity {
 
 
 
-        final TextView tv = findViewById(R.id.tv);
-        tv.setTextColor(Color.parseColor("#F02B6B"));
+        //final TextView tv = findViewById(R.id.tv);
+        //tv.setTextColor(Color.parseColor("#F02B6B"));
 
 
 
 
 
-        TimePicker timePicker = findViewById(R.id.timePicker);
-        timePicker.setIs24HourView(true);
+        //TimePicker timePicker = findViewById(R.id.timePicker);
+        //timePicker.setIs24HourView(true);
 
-        TimePicker timePicker2 = findViewById(R.id.timePicker2);
-        timePicker2.setIs24HourView(true);
+        //TimePicker timePicker2 = findViewById(R.id.timePicker2);
+        //timePicker2.setIs24HourView(true);
 
 
 
