@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         listBooking = new ArrayList<Booking>();
         listPerson = new ArrayList<Person>();
 
-        try {
+        /*try {
             DataBaseHelper DBHelper = new DataBaseHelper(MainActivity.this);
             db = DBHelper.getWritableDatabase();
             boolean i = DBHelper.checkdatabase();
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        */
 
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
@@ -121,15 +121,15 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        /*
+
         loadCursorToListClub(loadTableToCursor(ClubEntry.TABLE_NAME));
         loadCursorToListBooker(loadTableToCursor(BookerEntry.TABLE_NAME));
-        loadCursorToListBooking(loadTableToCursor(BookingEntry.TABLE_NAME));
-        loadCursorToListEquipment(loadTableToCursor(EquipmentEntry.TABLE_NAME));
         loadCursorToListSport(loadTableToCursor(SportEntry.TABLE_NAME));
-        loadCursorToListPerson(loadTableToCursor(PersonEntry.TABLE_NAME));
         loadCursorToListRoom(loadTableToCursor(RoomEntry.TABLE_NAME));
-        */
+        loadCursorToListEquipment(loadTableToCursor(EquipmentEntry.TABLE_NAME));
+        loadCursorToListBooking(loadTableToCursor(BookingEntry.TABLE_NAME));
+        loadCursorToListPerson(loadTableToCursor(PersonEntry.TABLE_NAME));
+
 
 
         /*testbutton = findViewById(R.id.testbutton);
@@ -170,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
             do {
                 int bookerID = cursor.getInt(0);
                 int clubID = cursor.getInt(1);
+                System.out.println("seuraid = " + bookerID);
                 listBooker.add(new Booker(bookerID, clubID));
             } while (cursor.moveToNext());
 
@@ -186,11 +187,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     public void loadCursorToListRoom(Cursor cursor){
+
+        System.out.println(cursor.getColumnCount());
         if (cursor.moveToFirst()) {
 
             do {int roomID = cursor.getInt(0);
+            System.out.println("SaliID: " +roomID);
                 int sportID = cursor.getInt(1);
+                System.out.println("LajiID: " + sportID);
                 String name = cursor.getString(2);
+                System.out.println("Lajinimi: " + name);
                 listRoom.add(new Room(roomID, sportID, name));
             } while (cursor.moveToNext());
 
@@ -212,11 +218,17 @@ public class MainActivity extends AppCompatActivity {
 
             System.out.println(cursor.getCount());
             do {int bookingID = cursor.getInt(0);
+            System.out.println("Varausid = " + bookingID);
                 int bookerID = cursor.getInt(1);
+                System.out.println("varaajaid = " + bookerID);
                 int roomID = cursor.getInt(2);
+                System.out.println("Saliid = " + roomID);
                 String startTime = cursor.getString(3);
+                System.out.println("Alkuaika = " + startTime);
                 String endTime = cursor.getString(4);
+                System.out.println("Loppuaika= " + endTime);
                 String date = cursor.getString(5);
+                System.out.println("pvm = " + date);
                 listBooking.add(new Booking(bookingID, bookerID, roomID, startTime, endTime, date));
             } while (cursor.moveToNext());
 
@@ -241,14 +253,14 @@ public class MainActivity extends AppCompatActivity {
         DataBaseHelper myDBHelper = null;
         try {
             myDBHelper = new DataBaseHelper(MainActivity.this);
-            myDBHelper.createdatabase();
+            //myDBHelper.createdatabase();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        myDBHelper.opendatabase();
-        Cursor cursor = myDBHelper.query(tableName, null, null, null, null, null, null);
-
+        //myDBHelper.opendatabase();
+        SQLiteDatabase db = myDBHelper.getWritableDatabase();
+        Cursor cursor = db.query(tableName, null, null, null, null, null, null);
         return cursor;
     }
 
@@ -298,9 +310,6 @@ public class MainActivity extends AppCompatActivity {
         insertValuesToRoom(db, 0,0, "Vanhis");
         insertValuesToEquipment(db, 0, 0, "Pesisvälineet");
         insertValuesToBooking(db, 0, 0, 0, "0800", "1000", "24072019");
-
-
-
     }
 
 
@@ -386,8 +395,10 @@ public class MainActivity extends AppCompatActivity {
     }
     public void insertValuesToPerson(SQLiteDatabase sqLiteDatabase, int bookerID, String name, String phonenumber) {
         ContentValues cv = new ContentValues();
+        System.out.println("Persoonan lisäys");
         cv.put(PersonEntry.COLUMN_BOOKERID, bookerID);
         cv.put(PersonEntry.COLUMN_NAME, name);
+        System.out.println(name);
         cv.put(PersonEntry.COLUMN_PHONENUMBER, phonenumber);
         listPerson.add(new Person(name, phonenumber, bookerID));
         sqLiteDatabase.insert("'"+PersonEntry.TABLE_NAME+"'", null, cv);

@@ -18,7 +18,7 @@ import com.example.ht2.BookingSystemContract.*;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
     private final Context myContext;
-    private static String DB_NAME = "varadxdcfdsfkjhgadsdfxdsasdvalilyyontifjdxcvtujssdfsdfdzxfcssddfasdsesaddsfsdfdassdfsdfsdfdasdasddasdsdfsdasdfsdfsSDFGdasdf.sql";
+    private static String DB_NAME = "varadxdcfdxdfgssdjrdffgdsddjfssffdddfgfdfdfgfxsdfgsddfdhjiffkdfgjsddzxdsgsdfffhgdfgadsdfxdsasdvhdxckjdfcxvalilyyoxdfntijfjdxcvtujssdfsdfdzxfcssddfasdsesaddsfsdfdassdfsdfsdfdasdasddasdsdfsdasdfsdfsSDFGdasdf.sql";
     private static int DB_VERSION = 1;
     public SQLiteDatabase database;
     private String DB_PATH = null;
@@ -122,7 +122,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 " CREATE TABLE IF NOT EXISTS " + RoomEntry.TABLE_NAME + " (" +
                 RoomEntry.COLUMN_ROOMID +" INTEGER PRIMARY KEY, " +
                 RoomEntry.COLUMN_SPORTID + " INTEGER, " +
-                RoomEntry.COLUMN_NAME + " TEXT," +
+                        RoomEntry.COLUMN_NAME + " TEXT, " +
                 " FOREIGN KEY ("+RoomEntry.COLUMN_SPORTID+") REFERENCES "+ SportEntry.TABLE_NAME+"("+SportEntry.COLUMN_SPORTID+"));";
         // Equipment
         sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
@@ -130,7 +130,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 " CREATE TABLE IF NOT EXISTS " + EquipmentEntry.TABLE_NAME + " (" +
                 EquipmentEntry.COLUMN_EQUIPMENTID +" INTEGER PRIMARY KEY, " +
                 EquipmentEntry.COLUMN_ROOMID + " INTEGER, " +
-                EquipmentEntry.COLUMN_NAME + " TEXT," +
+                EquipmentEntry.COLUMN_NAME + " TEXT, " +
                 " FOREIGN KEY ("+EquipmentEntry.COLUMN_ROOMID+") REFERENCES "+ RoomEntry.TABLE_NAME+"("+RoomEntry.COLUMN_ROOMID+"));";
         // Booking
         sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
@@ -153,6 +153,39 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 PersonEntry.COLUMN_BOOKERID +" INTEGER PRIMARY KEY, " +
                 PersonEntry.COLUMN_PHONENUMBER + " VARCHAR(64)," +
                 " FOREIGN KEY ("+PersonEntry.COLUMN_BOOKERID+") REFERENCES "+ BookerEntry.TABLE_NAME+"("+BookerEntry.COLUMN_BOOKERID+"));";
+        sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
+        String INSERT_INTO;
+        //INSERT_INTO = "INSERT INTO "+ ClubEntry.TABLE_NAME +" ("+ ClubEntry.COLUMN_CLUBID + ", " + ClubEntry.COLUMN_NAME + ") VALUES('0', 'Moikkeli');";
+        //sqLiteDatabase.execSQL(INSERT_INTO);
+        insertValuesToClub(sqLiteDatabase, 0, "Yksityinen");
+        insertValuesToClub(sqLiteDatabase, 1, "Lpr Maila-Veikot");
+        insertValuesToClub(sqLiteDatabase, 2, "Suunnistus-Jussit");
+        insertValuesToBooker(sqLiteDatabase, 0, 0);
+        insertValuesToBooker(sqLiteDatabase, 1, 1);
+        insertValuesToBooker(sqLiteDatabase, 2, 2);
+        insertValuesToSport(sqLiteDatabase, 0, "Muut palloilulajit");
+        insertValuesToSport(sqLiteDatabase, 1, "Tennis");
+        insertValuesToSport(sqLiteDatabase, 2, "Sulkapallo");
+        insertValuesToRoom(sqLiteDatabase, 0, 0, "Liikuntasali");
+        insertValuesToRoom(sqLiteDatabase, 1, 0, "Monitoimisali");
+        insertValuesToEquipment(sqLiteDatabase, 0, 0, "Pallohäkki");
+        insertValuesToEquipment(sqLiteDatabase, 1, 1, "Pallovarasto");
+        insertValuesToRoom(sqLiteDatabase, 2, 1, "Tenniskenttä1");
+        insertValuesToRoom(sqLiteDatabase, 3, 1, "Tenniskenttä2");
+        insertValuesToRoom(sqLiteDatabase, 4, 2, "Sulkapallokenttä1");
+        insertValuesToRoom(sqLiteDatabase, 5, 2, "Sulkapallokenttä2");
+        insertValuesToBooking(sqLiteDatabase, 0, 0, 0, "0800", "1000", "20122019");
+        insertValuesToBooking(sqLiteDatabase, 1, 0, 1, "0800", "1000", "21122019");
+        insertValuesToBooking(sqLiteDatabase, 2, 1, 0, "1000", "1200", "20122019");
+        insertValuesToBooking(sqLiteDatabase, 3, 1, 3, "0800", "1000", "21122019");
+        insertValuesToBooking(sqLiteDatabase, 4, 2, 0, "1000", "1200", "20122019");
+        insertValuesToBooking(sqLiteDatabase, 5, 2, 4, "0800", "1000", "21122019");
+
+        insertValuesToPerson(sqLiteDatabase, 0, "Henu", "3141592653");
+        insertValuesToPerson(sqLiteDatabase, 1, "Veikko", "123");
+        insertValuesToPerson(sqLiteDatabase, 2, "Jussi", "100");
+
+
         /*CREATE_OTHER_DB_TABLES = CREATE_OTHER_DB_TABLES +
                 "INSERT INTO "+ ClubEntry.TABLE_NAME +" VALUES(0, Moikkeli);" +
                 "INSERT INTO "+ BookerEntry.TABLE_NAME +" VALUES(0, 0);" +
@@ -163,8 +196,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 "INSERT INTO "+ RoomEntry.TABLE_NAME + " VALUES( Aleksi, 23423, 0);";
                 */
 
-        sqLiteDatabase.execSQL(CREATE_OTHER_DB_TABLES );
-        /* Cursor c = sqLiteDatabase.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
+        Cursor c = sqLiteDatabase.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
 
         if (c.moveToFirst()) {
             while ( !c.isAfterLast() ) {
@@ -172,7 +205,17 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 c.moveToNext();
             }
         }
-        */
+
+        String table = RoomEntry.TABLE_NAME;
+        Cursor dbCursor = sqLiteDatabase.query(table, null, null, null, null, null, null);
+        String[] columnNames = dbCursor.getColumnNames();
+        System.out.println("XXXX SDsdknvslk sdflnslänvdk");
+
+        System.out.println("Taulu: " + table);
+        System.out.println("ColumnCount: " + dbCursor.getColumnCount());
+        for (int i = 0; i < columnNames.length; i++){
+        System.out.println("Sarake: " + columnNames[i] + " " + i);}
+
 
     }
 
@@ -198,7 +241,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                     " CREATE TABLE IF NOT EXISTS " + RoomEntry.TABLE_NAME + " (" +
                     RoomEntry.COLUMN_ROOMID +" INTEGER PRIMARY KEY, " +
                     RoomEntry.COLUMN_SPORTID + " INTEGER, " +
-                    RoomEntry.COLUMN_NAME + "TEXT," +
+                    RoomEntry.COLUMN_NAME + " TEXT," +
                     " FOREIGN KEY ("+RoomEntry.COLUMN_SPORTID+") REFERENCES "+ SportEntry.TABLE_NAME+"("+SportEntry.COLUMN_SPORTID+"));";
             // Equipment
             CREATE_OTHER_DB_TABLES = CREATE_OTHER_DB_TABLES +
@@ -275,7 +318,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(BookerEntry.COLUMN_CLUBID, clubID);
         sqLiteDatabase.insert(BookerEntry.TABLE_NAME, null, cv);
     }
-    public void insertValuesToSport(SQLiteDatabase sqLiteDatabase, int id, String name){
+    public void insertValuesToSport(SQLiteDatabase sqLiteDatabase, int id,  String name){
         ContentValues cv = new ContentValues();
         cv.put(SportEntry.COLUMN_NAME, name);
         cv.put(SportEntry.COLUMN_SPORTID, id);
@@ -290,14 +333,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.insert(RoomEntry.TABLE_NAME, null, cv);
     }
 
-    public void insertValuesToEquipment(SQLiteDatabase sqLiteDatabase, int id, int RoomID, String name) {
+    public void insertValuesToEquipment(SQLiteDatabase sqLiteDatabase,int id, int RoomID, String name) {
         ContentValues cv = new ContentValues();
         cv.put(EquipmentEntry.COLUMN_EQUIPMENTID, id);
         cv.put(EquipmentEntry.COLUMN_ROOMID, RoomID);
         cv.put(EquipmentEntry.COLUMN_NAME, name);
-        sqLiteDatabase.insert(RoomEntry.TABLE_NAME, null, cv);
+        sqLiteDatabase.insert(EquipmentEntry.TABLE_NAME, null, cv);
     }
-    public void insertValuesToBooking(SQLiteDatabase sqLiteDatabase, int id, int bookerID, int RoomID, String startime, String endtime, String date){
+    public void insertValuesToBooking(SQLiteDatabase sqLiteDatabase,int id, int bookerID, int RoomID, String startime, String endtime, String date){
         ContentValues cv = new ContentValues();
         cv.put(BookingEntry.COLUMN_BOOKINGID, id);
         cv.put(BookingEntry.COLUMN_BOOKERID, bookerID);
@@ -305,12 +348,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(BookingEntry.COLUMN_STARTTIME, startime);
         cv.put(BookingEntry.COLUMN_ENDTIME, endtime);
         cv.put(BookingEntry.COLUMN_DATE, date);
+        sqLiteDatabase.insert(BookingEntry.TABLE_NAME, null, cv);
     }
     public void insertValuesToPerson(SQLiteDatabase sqLiteDatabase, int bookerID, String name, String phonenumber) {
         ContentValues cv = new ContentValues();
         cv.put(PersonEntry.COLUMN_BOOKERID, bookerID);
         cv.put(PersonEntry.COLUMN_NAME, name);
         cv.put(PersonEntry.COLUMN_PHONENUMBER, phonenumber);
+        sqLiteDatabase.insert(PersonEntry.TABLE_NAME, null, cv);
 
     }
 }

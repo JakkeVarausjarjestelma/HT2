@@ -48,15 +48,14 @@ public class ListBookings extends AppCompatActivity {
 
         Intent intent = getIntent();
         final ArrayList listClub = intent.getParcelableArrayListExtra("Club");
-
-        Bundle bundle2 = getIntent().getExtras();
-        ArrayList listSport = bundle2.getParcelableArrayList("Sport");
+        ArrayList listSport = intent.getParcelableArrayListExtra("Sport");
+// ArrayList listSport = bundle2.getParcelableArrayList("Sport");
 
         Bundle bundle3= getIntent().getExtras();
         ArrayList listRoom = bundle3.getParcelableArrayList("Room");
 
         Bundle bundle4 = getIntent().getExtras();
-        ArrayList listPerson = bundle4.getParcelableArrayList("Person");
+        ArrayList listPerson =intent.getParcelableArrayListExtra("Person");
 
         Bundle bundle5 = getIntent().getExtras();
         ArrayList listEquipment = bundle5.getParcelableArrayList("Equipment");
