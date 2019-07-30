@@ -47,6 +47,7 @@ public class CreateUser extends AppCompatActivity {
         userExists = intent.getBooleanExtra("userExists", false);
         if (userExists) {
             bookerID = intent.getIntExtra("bookerID", -2);
+
         }
         System.out.println("Käyttäjä on: " + userExists);
 
@@ -139,6 +140,7 @@ public class CreateUser extends AppCompatActivity {
         //listPerson.add(new Person(name, phonenumber, bookerID));
         userExists = true;
         textView.setText("Muokkaa käyttäjän tietoja");
+        button.setText("Tee muutokset");
 
 
     }
@@ -167,6 +169,16 @@ public class CreateUser extends AppCompatActivity {
         System.out.println("Resume, userExists: " + userExists);
         if(userExists) {
             textView.setText("Muokkaa käyttäjän tietoja");
+            button.setText("Tee muutokset");
+
+            for (int index = 0; index < listPerson.size(); index++){
+                int compare_bookerID = ((Person) listPerson.get(index)).getBookerID();
+                if (compare_bookerID == bookerID){
+                    System.out.println("MOPSJDpansdfö");
+                    nametext.setText(((Person) listPerson.get(index)).getName(), TextView.BufferType.EDITABLE);
+                    phonenumbertext.setText(((Person) listPerson.get(index)).getPhoneNumber(), TextView.BufferType.EDITABLE);
+                }
+            }
         }
 
     }

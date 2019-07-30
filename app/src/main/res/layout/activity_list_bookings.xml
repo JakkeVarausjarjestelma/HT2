@@ -35,16 +35,16 @@
         tools:ignore="DuplicateIds,MissingConstraints" />
 
 
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Button" />
-
     <Spinner
         android:id="@+id/spinner2"
         android:layout_width="290dp"
         android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="151dp"
+        android:layout_height="wrap_content"
+        android:text="Hae valitsemasi lajin mukaan" />
 
     <TextView
         android:id="@+id/tv3"
@@ -65,14 +65,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Hae Valitsemasi käyttäjän mukaan" />
-
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="181dp"
-        android:layout_height="wrap_content"
-        android:background="#FC8C68"
-        android:text="Button"
-        android:textColor="#F1EBEB" />
 
     <TextView
         android:id="@+id/textView5"

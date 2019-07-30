@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListBookings"></activity>
+        <activity android:name=".EditBooking"></activity>
+        <activity android:name=".ListBookings" />
         <activity android:name=".MakeBooking" />
         <activity android:name=".CreateUser" />
         <activity android:name=".MainActivity">

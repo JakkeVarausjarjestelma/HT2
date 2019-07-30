@@ -52,6 +52,7 @@ public class MakeBooking extends AppCompatActivity {
         timePicker2 = findViewById(R.id.timePicker2);
         timePicker1.setIs24HourView(true);
         timePicker2.setIs24HourView(true);
+        timePicker2.setHour(timePicker1.getHour()+1);
         numberPicker = findViewById(R.id.numberPicker1);
         numberPicker.setMinValue(1);
         numberPicker.setMaxValue(12);
@@ -85,11 +86,38 @@ public class MakeBooking extends AppCompatActivity {
                 int sportID = ((Sport) sportSpinner.getSelectedItem()).getSportID();
                 int roomID = ((Room) roomSpinner.getSelectedItem()).getRoomID();
 
-                String starttimeAsString = String.valueOf(timePicker1.getHour()) + String.valueOf(timePicker1.getMinute());
-                String endtimeAsString = String.valueOf(timePicker2.getHour()) + String.valueOf(timePicker2.getMinute());
 
+                int hour = timePicker1.getHour();
+                String h;
+                if (hour < 10) {
+                    h = "0" + String.valueOf(hour);
+                            } else {
+                    h = String.valueOf(hour);
+                }
+                int minute = timePicker1.getMinute();
+                String m;
+                if (minute < 10) {
+                    m = "0" + String.valueOf(minute);
+                } else {
+                    m = String.valueOf(minute);
+                }
 
+                String starttimeAsString = h+ String.valueOf(m);
 
+                hour = timePicker2.getHour();
+                if (hour < 10) {
+                    h = "0" + String.valueOf(hour);
+                } else {
+                    h = String.valueOf(hour);
+                }
+                minute = timePicker2.getMinute();
+                if (minute < 10) {
+                    m = "0" + String.valueOf(minute);
+                } else {
+                    m = String.valueOf(minute);
+                }
+
+                String endtimeAsString = String.valueOf(h) + String.valueOf(h);
 
                 int id_max = 0;
                 for (int i = 0; i < listBooking.size(); i++){
@@ -100,18 +128,42 @@ public class MakeBooking extends AppCompatActivity {
                 }
                 int bookingID = id_max +1;
 
-                boolean ok = checkTimeAvailable(daysFromMillennium, starttimeAsMinutes, endtimeAsMinutes);
+
+                boolean ok;
+                ok = checkTimeAvailable(daysFromMillennium, starttimeAsMinutes, endtimeAsMinutes, roomID);
+
                 if (ok) {
                     int year = datePicker.getYear();
                     int month = datePicker.getMonth();
                     int day = datePicker.getDayOfMonth();
                     makeBooking(year, month, day, starttimeAsString, endtimeAsString, times, sportID, roomID, bookingID);
-
                 } else {
-                    Toast.makeText(MakeBooking.this, "Päällekkäisiä varauksia", Toast.LENGTH_LONG).show();
+                    Toast.makeText(MakeBooking.this, "Päällekkäisiä varauksia! Varauksen teko ei onnistunut", Toast.LENGTH_LONG).show();
+                }
 
+                /*    // this is for makeing booking multiple times
+                ArrayList<Boolean> checklist;
+                checklist = new ArrayList<Boolean>();
+                int movingdate = daysFromMillennium;
+                for (int n = 0; n < times; n++) {
+                    movingdate = daysFromMillennium + n*7;
+                    ok = checkTimeAvailable(movingdate, starttimeAsMinutes, endtimeAsMinutes, roomID);
+                    checklist.add(ok);
+                }
+
+                boolean b;
+                for (int i = 0; i < times; i++) {
+                    b = checklist.get(i).booleanValue();
+                    if (b) {
+
+
+                    }
 
                 }
+                */
+
+
+
 
 
             }
@@ -207,6 +259,7 @@ public class MakeBooking extends AppCompatActivity {
 
     public void makeBooking(int year, int month, int day, String starttime, String endtime, int times, int sportID, int roomID, int bookingID){
         String twoDigitMonth;
+
         if (month < 10) {
             twoDigitMonth = "0" + String.valueOf(month+1);
         }
@@ -237,6 +290,7 @@ public class MakeBooking extends AppCompatActivity {
             sqLiteDatabase.insert(BookingSystemContract.BookingEntry.TABLE_NAME, null, cv);
             listBooking.add(new Booking(bookingID, bookerID, roomID, starttime, endtime, date));
             System.out.println("PVM " + date + "\nAlkuaika " + starttime + "\nLoppuaika " + endtime);
+            Toast.makeText(MakeBooking.this, "Varaus tehty onnistuneesti", Toast.LENGTH_LONG).show();
 
 
 
@@ -246,48 +300,72 @@ public class MakeBooking extends AppCompatActivity {
 
     }
 
-    public boolean checkTimeAvailable(int daysFromMillennium1, int starttime1FromMidnight, int endtime1FromMidnight){
+    public boolean checkTimeAvailable(int daysFromMillennium1, int starttime1FromMidnight, int endtime1FromMidnight, int roomID1){
 
         for (int i = 0; i < listBooking.size(); i++) {
             String date = ((Booking) listBooking.get(i)).getDate();
+            int roomdID2 = ((Booking) listBooking.get(i)).getRoomID();
             char tens = date.charAt(0);
             char ones = date.charAt(1);
-            int day = Integer.parseInt(String.valueOf(tens + ones));
+            String d = String.valueOf(tens)+String.valueOf(ones);
+            int day = Integer.parseInt(String.valueOf(d));
+            System.out.println("Date: " + date);
+            System.out.println("Päivä: " + day);
             tens = date.charAt(2);
             ones = date.charAt(3);
-            int month = Integer.parseInt(String.valueOf(tens + ones));
+            d = String.valueOf(tens)+String.valueOf(ones);
+            int month = Integer.parseInt(String.valueOf(d));
+            System.out.println("Kuu: " + month);
             char thousands = date.charAt(4);
             char hundreds = date.charAt(5);
             tens = date.charAt(6);
             ones = date.charAt(7);
-            int year = Integer.parseInt(String.valueOf(thousands + hundreds + tens + ones));
+            d = String.valueOf(thousands)+String.valueOf(hundreds) + String.valueOf(tens)+ String.valueOf(ones);
+            int year = Integer.parseInt(d);
+            System.out.println("Vuos: " + year);
             int daysFromMillennium2 = dateToInt(year, month, day);
-            if (daysFromMillennium1 == daysFromMillennium2) {
+            System.out.println("Pvm1: " + daysFromMillennium1 + " vs pvm2: " + daysFromMillennium2);
+
+            if (daysFromMillennium1 == daysFromMillennium2 && roomID1 == roomdID2) {
+                System.out.println("Sentään tässä");
                 String starttime2AsString = ((Booking) listBooking.get(i)).getStartTime();
+                System.out.println("Akkotusaikastringinä" + starttime2AsString);
                 tens = starttime2AsString.charAt(0);
                 ones = starttime2AsString.charAt(1);
-                int hour = Integer.parseInt(String.valueOf(tens + ones));
+                String f = String.valueOf(tens)+String.valueOf(ones);
+                int hour = Integer.parseInt(f);
                 tens = starttime2AsString.charAt(2);
                 ones = starttime2AsString.charAt(3);
-                int minute = Integer.parseInt(String.valueOf(tens + ones));
+                f = String.valueOf(tens)+String.valueOf(ones);
+                int minute = Integer.parseInt(f);
                 int starttime2FromMidnight = 60 * hour + minute;
+                System.out.println("starttime2fromidnighy" + starttime2FromMidnight);
 
                 String endtime2AsString = ((Booking) listBooking.get(i)).getEndTime();
                 tens = endtime2AsString.charAt(0);
                 ones = endtime2AsString.charAt(1);
-                hour = Integer.parseInt(String.valueOf(tens + ones));
+                f = String.valueOf(tens)+String.valueOf(ones);
+                hour = Integer.parseInt(f);
                 tens = endtime2AsString.charAt(2);
                 ones = endtime2AsString.charAt(3);
-                minute = Integer.parseInt(String.valueOf(tens + ones));
+                f = String.valueOf(tens)+String.valueOf(ones);
+                minute = Integer.parseInt(f);
                 int endtime2FromMidnight = 60 * hour + minute;
 
                 if ((starttime1FromMidnight < starttime2FromMidnight) && (endtime1FromMidnight > endtime2FromMidnight)) {
+                    System.out.println("Möhlin tässä1");
                     return false;
                 } else if ((starttime2FromMidnight < starttime1FromMidnight) && (endtime2FromMidnight > endtime1FromMidnight)) {
+                    System.out.println("Möhlin tässä2");
                     return false;
                 } else if ((starttime1FromMidnight < starttime2FromMidnight) && (endtime1FromMidnight > starttime2FromMidnight)) {
+                    System.out.println("Möhlin tässä3");
                     return false;
                 } else if ((starttime2FromMidnight < starttime1FromMidnight) && (endtime2FromMidnight > starttime1FromMidnight)) {
+                    System.out.println("Möhlin tässä4");
+                    return false;
+                } else if ((starttime1FromMidnight == starttime2FromMidnight) || endtime1FromMidnight == endtime2FromMidnight){
+                    System.out.println("Möhlin tässä5");
                     return false;
                 }
             }
@@ -297,15 +375,22 @@ public class MakeBooking extends AppCompatActivity {
 
     public int datepickerToInt() {
         int year = datePicker.getYear();
+        System.out.println("Vuosi on: " + (year-2000));
+        int yearInDays = 365*(year-2000);
+        System.out.println("Vuosi päivinä " + yearInDays);
         int month = datePicker.getMonth();
+        System.out.println("Kuukausi datepickertointissä" + month);
+        int monthInDays = 31*(month);
+        System.out.println("Kuukaus päivinä " + monthInDays);
         int day = datePicker.getDayOfMonth();
+        System.out.println("Päivä "  + day);
 
-        int daysFromMillennium = 365*(year-2000) + 31*(month-1) + day-1;
+        int daysFromMillennium = yearInDays + monthInDays + day;
         return daysFromMillennium;
     }
 
     public int dateToInt(int year, int month, int day) {
-        int daysFromMillennium = 365*(year-2000) + 31*(month-1) + day-1;
+        int daysFromMillennium = 365*(year-2000) + 31*(month-1) + day;
         return daysFromMillennium;
     }
 

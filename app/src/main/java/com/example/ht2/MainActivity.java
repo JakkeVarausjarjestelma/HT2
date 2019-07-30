@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private Button button1;
     private Button button2;
     private Button button3;
-    private Button testbutton;
+    private Button button4;
+
 
     public ArrayList<Club> listClub;
     public ArrayList<Booker> listBooker;
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
+        button4 = findViewById(R.id.button);
 
 
         button1.setOnClickListener(new View.OnClickListener(){
@@ -68,6 +70,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 openListBookings();
+            }
+        });
+        button4.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                openEditBooking();
             }
         });
 
@@ -247,6 +255,16 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, 999);
     }
 
+    public void openEditBooking(){
+        if (userExists) {
+            Intent intent = getAllListIntents(EditBooking.class);
+            intent.putExtra("bookerID", bookerID);
+            startActivityForResult(intent, 999);
+        } else {
+            Toast.makeText(MainActivity.this, "Luo käyttäjä ensin!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -261,18 +279,16 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Äksä on: " + x);
             userExists = data.getBooleanExtra("userExists", false);
             if (userExists) {
+                button1.setText("Muokkaa käyttäjän tietoja");
                 bookerID = data.getIntExtra("bookerID",  -2);
             }
             System.out.println("Käyttäjä on: " + userExists);
-            button1.setText("Muokkaa käyttäjän tietoja");
+
         }
         else {System.out.print("Ei toimi");
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-
-
 
     public Intent getAllListIntents(Class<?> cls){
         Intent intent = new Intent(this, cls);
