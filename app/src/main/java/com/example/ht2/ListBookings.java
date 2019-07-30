@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -114,8 +115,8 @@ public class ListBookings extends AppCompatActivity {
             @Override
             //Search by Person
             public void onClick(View view) {
-                //int personID = ((Person) spinner3.getSelectedItem().getPersonID());
-                //searchByPerson(personID);
+                int bookerID = ((Person) spinner3.getSelectedItem()).getBookerID();
+                searchByPerson(bookerID);
 
             }
         });
@@ -190,14 +191,26 @@ public class ListBookings extends AppCompatActivity {
 
     private void searchByPerson(int personid) {
 
-        String s = "SELECT * FROM Varaus WHERE VaraajaID  = ?";
+        String s = "SELECT Varaus.Päivämäärä, Varaus.Aloitusaika  FROM Varaus INNER JOIN Varaaja ON Varaus.VaraajaID = Varaaja.VaraajaID WHERE Varaaja.VaraajaID = "+personid+";";
+        System.out.println(s);
+        // String s = "SELECT * FROM Varaus WHERE VaraajaID  = ?";
 
-        Cursor c = db.rawQuery(s, new String[] {String.valueOf(personid)});
+        Cursor c = db.rawQuery(s, null);
 
-        TextView textView = findViewById(R.id.textView5);
+        if (c.moveToFirst()) {
+            do {
+                System.out.println("asdfegea");
+                Toast.makeText(ListBookings.this, "id: " + c.getString(0) + "\n" + "Nimi: " + c.getString(1), Toast.LENGTH_SHORT).show();
 
-        textView.setText((CharSequence) c);
+            } while (c.moveToNext());
 
+
+        } else { Toast.makeText(ListBookings.this, "Ei varauksia tällä haulla!", Toast.LENGTH_SHORT).show();}
+
+        //TextView textView = findViewById(R.id.textView5);
+
+        //textView.setText((CharSequence) c);
+        c.close();
 
 
     }

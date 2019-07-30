@@ -75,7 +75,7 @@ public class CreateUser extends AppCompatActivity {
 
                 System.out.println("Mennään for-looppiin");
                 for (int i = 0; i < listBooker.size(); i++) {
-                    int id = Integer.parseInt(listBooker.get(i).toString());
+                    int id = ((Booker) listBooker.get(i)).getBookerID();
                     if (id >= id_max) {
                         id_max = id;
                     }
