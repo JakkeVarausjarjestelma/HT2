@@ -191,9 +191,8 @@ public class MainActivity extends AppCompatActivity {
     public void loadCursorToListPerson(Cursor cursor){
         if (cursor.moveToFirst()) {
             do {String name = cursor.getString(0);
-            //System.out.println(name);
-                String phoneNumber = cursor.getString(1);
-                int bookerID = cursor.getInt(2);
+                int bookerID = cursor.getInt(1);
+                String phoneNumber = cursor.getString(2);
                 listPerson.add(new Person(name, phoneNumber, bookerID));
             } while (cursor.moveToNext());
 

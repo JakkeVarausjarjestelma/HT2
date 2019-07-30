@@ -22,8 +22,8 @@ import java.util.ArrayList;
 
 public class CreateUser extends AppCompatActivity {
     ArrayList listClub;
-    public ArrayList listPerson;
-    public ArrayList listBooker;
+    ArrayList listPerson;
+    ArrayList listBooker;
     EditText nametext;
     EditText phonenumbertext;
     Button button;
@@ -72,13 +72,15 @@ public class CreateUser extends AppCompatActivity {
 
                 if (userExists == false) {
                 int id_max = 0;
+
                 System.out.println("Mennään for-looppiin");
                 for (int i = 0; i < listBooker.size(); i++) {
-                    bookerID = Integer.parseInt(listBooker.get(i).toString());
-                    if (bookerID >= id_max) {
-                        id_max = bookerID;
+                    int id = Integer.parseInt(listBooker.get(i).toString());
+                    if (id >= id_max) {
+                        id_max = id;
                     }
                 }
+
                 System.out.println("ID_max: " +id_max);
                 bookerID = id_max + 1;
                 System.out.println("BookerID: " + bookerID);

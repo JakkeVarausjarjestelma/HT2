@@ -67,4 +67,9 @@ public class Equipment implements Parcelable {
         parcel.writeInt(roomID);
         parcel.writeString(name);
     }
+
+    @Override
+    public String toString() {
+        return this.getName();
+    }
 }
