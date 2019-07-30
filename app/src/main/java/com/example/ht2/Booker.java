@@ -56,4 +56,10 @@ public class Booker implements Parcelable {
         parcel.writeInt(clubID);
         parcel.writeInt(bookerID);
     }
+
+    @Override
+    public String toString() {
+        int id = this.getBookerID();
+        return String.valueOf(id);
+    }
 }

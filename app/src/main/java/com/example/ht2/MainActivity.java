@@ -1,5 +1,6 @@
 package com.example.ht2;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ContentValues;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
     public SQLiteDatabase mDatabase;
     public SQLiteDatabase db;
+    boolean userExists = false;
+    int bookerID;
 
 
 
@@ -44,51 +47,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listClub = new ArrayList<Club>();
-        listBooker = new ArrayList<Booker>();
-        listSport = new ArrayList<Sport>();
-        listRoom = new ArrayList<Room>();
-        listEquipment = new ArrayList<Equipment>();
-        listBooking = new ArrayList<Booking>();
-        listPerson = new ArrayList<Person>();
-
-        /*try {
-            DataBaseHelper DBHelper = new DataBaseHelper(MainActivity.this);
-            db = DBHelper.getWritableDatabase();
-            boolean i = DBHelper.checkdatabase();
-            if (i == true) {
-                System.out.println("Tyhjä db");
-                insertBeginValues(db);
-            } else {System.out.println("on jo db");}
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
-
         button1 = findViewById(R.id.button1);
         button2 = findViewById(R.id.button2);
         button3 = findViewById(R.id.button3);
 
-        testbutton = findViewById(R.id.testbutton);
-
-        testbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    DataBaseHelper dbHelper = new DataBaseHelper(MainActivity.this);
-                    mDatabase = dbHelper.getWritableDatabase();
-                    insertValuesToClub(mDatabase, listClub.size(), "Yksityinen");
-                    Cursor c = loadTableToCursor(ClubEntry.TABLE_NAME);
-                    loadCursorToListClub(c);
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                System.out.println(listClub.size());
-            }
-        });
 
         button1.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -111,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
         try {
             DataBaseHelper dbHelper = new DataBaseHelper(this);
             mDatabase = dbHelper.getWritableDatabase();
@@ -121,14 +84,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
-        loadCursorToListClub(loadTableToCursor(ClubEntry.TABLE_NAME));
-        loadCursorToListBooker(loadTableToCursor(BookerEntry.TABLE_NAME));
-        loadCursorToListSport(loadTableToCursor(SportEntry.TABLE_NAME));
-        loadCursorToListRoom(loadTableToCursor(RoomEntry.TABLE_NAME));
-        loadCursorToListEquipment(loadTableToCursor(EquipmentEntry.TABLE_NAME));
-        loadCursorToListBooking(loadTableToCursor(BookingEntry.TABLE_NAME));
-        loadCursorToListPerson(loadTableToCursor(PersonEntry.TABLE_NAME));
+        loadDBtoArrayLists();
 
 
 
@@ -156,10 +112,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void loadCursorToListClub(Cursor cursor){
         if (cursor.moveToFirst()) {
-
             do {int clubID = cursor.getInt(0);
                 String name = cursor.getString(1);
-                System.out.println(name);
+                //System.out.println(name);
                 listClub.add(new Club(clubID, name));
             } while (cursor.moveToNext());
 
@@ -170,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             do {
                 int bookerID = cursor.getInt(0);
                 int clubID = cursor.getInt(1);
-                System.out.println("seuraid = " + bookerID);
+                //System.out.println("seuraid = " + bookerID);
                 listBooker.add(new Booker(bookerID, clubID));
             } while (cursor.moveToNext());
 
@@ -183,20 +138,19 @@ public class MainActivity extends AppCompatActivity {
                 String name = cursor.getString(1);
                 listSport.add(new Sport(sportID, name));
             } while (cursor.moveToNext());
-
         }
     }
     public void loadCursorToListRoom(Cursor cursor){
 
-        System.out.println(cursor.getColumnCount());
+        //System.out.println(cursor.getColumnCount());
         if (cursor.moveToFirst()) {
 
             do {int roomID = cursor.getInt(0);
-            System.out.println("SaliID: " +roomID);
+            //System.out.println("SaliID: " +roomID);
                 int sportID = cursor.getInt(1);
-                System.out.println("LajiID: " + sportID);
+                //System.out.println("LajiID: " + sportID);
                 String name = cursor.getString(2);
-                System.out.println("Lajinimi: " + name);
+                //System.out.println("Lajinimi: " + name);
                 listRoom.add(new Room(roomID, sportID, name));
             } while (cursor.moveToNext());
 
@@ -216,19 +170,19 @@ public class MainActivity extends AppCompatActivity {
     public void loadCursorToListBooking(Cursor cursor){
         if (cursor.moveToFirst()) {
 
-            System.out.println(cursor.getCount());
+            //System.out.println(cursor.getCount());
             do {int bookingID = cursor.getInt(0);
-            System.out.println("Varausid = " + bookingID);
+            //System.out.println("Varausid = " + bookingID);
                 int bookerID = cursor.getInt(1);
-                System.out.println("varaajaid = " + bookerID);
+                //System.out.println("varaajaid = " + bookerID);
                 int roomID = cursor.getInt(2);
-                System.out.println("Saliid = " + roomID);
+                //System.out.println("Saliid = " + roomID);
                 String startTime = cursor.getString(3);
-                System.out.println("Alkuaika = " + startTime);
+                //System.out.println("Alkuaika = " + startTime);
                 String endTime = cursor.getString(4);
-                System.out.println("Loppuaika= " + endTime);
+                //System.out.println("Loppuaika = " + endTime);
                 String date = cursor.getString(5);
-                System.out.println("pvm = " + date);
+                //System.out.println("pvm = " + date);
                 listBooking.add(new Booking(bookingID, bookerID, roomID, startTime, endTime, date));
             } while (cursor.moveToNext());
 
@@ -237,6 +191,7 @@ public class MainActivity extends AppCompatActivity {
     public void loadCursorToListPerson(Cursor cursor){
         if (cursor.moveToFirst()) {
             do {String name = cursor.getString(0);
+            //System.out.println(name);
                 String phoneNumber = cursor.getString(1);
                 int bookerID = cursor.getInt(2);
                 listPerson.add(new Person(name, phoneNumber, bookerID));
@@ -244,9 +199,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
-
-
 
 
     public Cursor loadTableToCursor(String tableName) {
@@ -264,27 +216,64 @@ public class MainActivity extends AppCompatActivity {
         return cursor;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadDBtoArrayLists();
 
-
+    }
 
     public void openCreateUser(){
-        // Luo käyttäjä
         Intent intent = getAllListIntents(CreateUser.class);
-        startActivity(intent);
+        intent.putExtra("userExists", userExists);
+        if (userExists) {
+            intent.putExtra("bookerID", bookerID);
+        }
+        startActivityForResult(intent, 999);
     }
 
     public void openMakeBooking(){
-        //  Tee varaus
-        Intent intent = getAllListIntents(MakeBooking.class);
-        startActivity(intent);
+        if (userExists) {
+            Intent intent = getAllListIntents(MakeBooking.class);
+            intent.putExtra("bookerID", bookerID);
+            startActivityForResult(intent, 999);
+        } else {
+            Toast.makeText(MainActivity.this, "Luo käyttäjä ensin!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void openListBookings(){
-        //  Tee varaus
-
         Intent intent = getAllListIntents(ListBookings.class);
-        startActivity(intent);
+        startActivityForResult(intent, 999);
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        System.out.println("requestCode on: " + requestCode);
+        System.out.println(("resultCode on: "+ resultCode));
+        if (requestCode == 999 && resultCode == RESULT_OK) {
+            System.out.println("requestCode on: " + requestCode);
+            System.out.println(("resultCode on: "+ resultCode));
+            System.out.println("Tietoa tulee");
+            int x = data.getIntExtra("testi", 0);
+            System.out.println("Äksä on: " + x);
+            userExists = data.getBooleanExtra("userExists", false);
+            if (userExists) {
+                bookerID = data.getIntExtra("bookerID",  -2);
+            }
+            System.out.println("Käyttäjä on: " + userExists);
+            button1.setText("Muokkaa käyttäjän tietoja");
+        }
+        else {System.out.print("Ei toimi");
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+
 
     public Intent getAllListIntents(Class<?> cls){
         Intent intent = new Intent(this, cls);
@@ -296,21 +285,27 @@ public class MainActivity extends AppCompatActivity {
         intent.putParcelableArrayListExtra("Booker", listBooker);
         intent.putParcelableArrayListExtra("Booking", listBooking);
         return intent;
-
     }
 
-    public void insertBeginValues(SQLiteDatabase db){
-        insertValuesToClub(db, 0, "Pesäysit" );
-        insertValuesToClub(db, 1, "Fera" );
-        insertValuesToBooker(db, 0, 0);
-        insertValuesToPerson(db, 0, "Lantta", "314159");
-        insertValuesToPerson(db, 1, "Aleksi", "314159");
-        insertValuesToSport(db, 0, "Pesis");
-        insertValuesToSport(db, 1, "Futis");
-        insertValuesToRoom(db, 0,0, "Vanhis");
-        insertValuesToEquipment(db, 0, 0, "Pesisvälineet");
-        insertValuesToBooking(db, 0, 0, 0, "0800", "1000", "24072019");
+    public void loadDBtoArrayLists(){
+        listClub = new ArrayList<Club>();
+        listBooker = new ArrayList<Booker>();
+        listSport = new ArrayList<Sport>();
+        listRoom = new ArrayList<Room>();
+        listEquipment = new ArrayList<Equipment>();
+        listBooking = new ArrayList<Booking>();
+        listPerson = new ArrayList<Person>();
+
+        loadCursorToListClub(loadTableToCursor(ClubEntry.TABLE_NAME));
+        loadCursorToListBooker(loadTableToCursor(BookerEntry.TABLE_NAME));
+        loadCursorToListSport(loadTableToCursor(SportEntry.TABLE_NAME));
+        loadCursorToListRoom(loadTableToCursor(RoomEntry.TABLE_NAME));
+        loadCursorToListEquipment(loadTableToCursor(EquipmentEntry.TABLE_NAME));
+        loadCursorToListBooking(loadTableToCursor(BookingEntry.TABLE_NAME));
+        loadCursorToListPerson(loadTableToCursor(PersonEntry.TABLE_NAME));
     }
+
+
 
 
     /*public void write(){
@@ -338,72 +333,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 */
-    public void insertValuesToClub(SQLiteDatabase sqLiteDatabase, int id, String name){
-        ContentValues cv = new ContentValues();
-        cv.put(ClubEntry.COLUMN_NAME, name);
-        cv.put(ClubEntry.COLUMN_CLUBID, id);
-        sqLiteDatabase.insert("'"+ClubEntry.TABLE_NAME+"'", null, cv);
-    }
-
-
-        //String sql = "INSERT INTO Seura VALUES( " + id + " , " + name + " );";
-        //sqLiteDatabase.execSQL(sql);
-
-    public void insertValuesToBooker(SQLiteDatabase sqLiteDatabase, int id, int clubID){
-        ContentValues cv = new ContentValues();
-        cv.put(BookerEntry.COLUMN_BOOKERID, id);
-        cv.put(BookerEntry.COLUMN_CLUBID, clubID);
-        listBooker.add(new Booker(id, clubID));
-        sqLiteDatabase.insert("'" +BookerEntry.TABLE_NAME+"'", null, cv);
-    }
-    public void insertValuesToSport(SQLiteDatabase sqLiteDatabase, int id, String name){
-        ContentValues cv = new ContentValues();
-        cv.put(SportEntry.COLUMN_NAME, name);
-        cv.put(SportEntry.COLUMN_SPORTID, id);
-        listSport.add(new Sport(id, name));
-        sqLiteDatabase.insert("'" +SportEntry.TABLE_NAME+ "'", null, cv);
-    }
-
-    public void insertValuesToRoom(SQLiteDatabase sqLiteDatabase, int id, int SportID, String name){
-        ContentValues cv = new ContentValues();
-        cv.put(RoomEntry.COLUMN_ROOMID, id);
-        cv.put(RoomEntry.COLUMN_NAME, name);
-        cv.put(RoomEntry.COLUMN_SPORTID, SportID);
-
-        listRoom.add(new Room(id, SportID, name));
-        sqLiteDatabase.insert("'"+RoomEntry.TABLE_NAME+"'", null, cv);
-    }
-
-    public void insertValuesToEquipment(SQLiteDatabase sqLiteDatabase, int id, int RoomID, String name) {
-        ContentValues cv = new ContentValues();
-        cv.put(EquipmentEntry.COLUMN_EQUIPMENTID, id);
-        cv.put(EquipmentEntry.COLUMN_ROOMID, RoomID);
-        cv.put(EquipmentEntry.COLUMN_NAME, name);
-        listEquipment.add(new Equipment(id, RoomID, name));
-        sqLiteDatabase.insert("'"+ EquipmentEntry.TABLE_NAME+"'", null, cv);
-    }
-    public void insertValuesToBooking(SQLiteDatabase sqLiteDatabase, int id, int bookerID, int RoomID, String startime, String endtime, String date){
-        ContentValues cv = new ContentValues();
-        cv.put(BookingEntry.COLUMN_BOOKINGID, id);
-        cv.put(BookingEntry.COLUMN_BOOKERID, bookerID);
-        cv.put(BookingEntry.COLUMN_ROOMID, RoomID);
-        cv.put(BookingEntry.COLUMN_STARTTIME, startime);
-        cv.put(BookingEntry.COLUMN_ENDTIME, endtime);
-        cv.put(BookingEntry.COLUMN_DATE, date);
-        listBooking.add(new Booking(id, bookerID, RoomID, startime, endtime, date));
-        sqLiteDatabase.insert("'"+BookingEntry.TABLE_NAME+"'", null, cv);
-    }
-    public void insertValuesToPerson(SQLiteDatabase sqLiteDatabase, int bookerID, String name, String phonenumber) {
-        ContentValues cv = new ContentValues();
-        System.out.println("Persoonan lisäys");
-        cv.put(PersonEntry.COLUMN_BOOKERID, bookerID);
-        cv.put(PersonEntry.COLUMN_NAME, name);
-        System.out.println(name);
-        cv.put(PersonEntry.COLUMN_PHONENUMBER, phonenumber);
-        listPerson.add(new Person(name, phonenumber, bookerID));
-        sqLiteDatabase.insert("'"+PersonEntry.TABLE_NAME+"'", null, cv);
-
-    }
 
 };
 
