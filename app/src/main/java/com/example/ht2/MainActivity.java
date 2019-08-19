@@ -1,24 +1,27 @@
 package com.example.ht2;
 
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.ContentValues;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.media.audiofx.DynamicsProcessing;
+import android.icu.text.SimpleDateFormat;
+
+import android.net.ParseException;
 import android.os.Bundle;
-import android.os.Parcelable;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.sql.Date;
-import java.sql.Time;
+
 import java.util.ArrayList;
 import com.example.ht2.BookingSystemContract.*;
+
+import org.json.JSONException;
 
 public class MainActivity extends AppCompatActivity {
     private Button button1;
@@ -39,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     public SQLiteDatabase db;
     boolean userExists = false;
     int bookerID;
-
 
 
 
@@ -80,43 +82,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
-
         try {
             DataBaseHelper dbHelper = new DataBaseHelper(this);
             mDatabase = dbHelper.getWritableDatabase();
 
-            //insertValuesToClub(mDatabase, 0, "Yksityinen");
-            //listClub.add(new Club(0, "Yksityinen"));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         loadDBtoArrayLists();
-
-
-
-        /*testbutton = findViewById(R.id.testbutton);
-        testbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                testi();
-            }
-        });
-        */
-
-
     }
 
-    /*public void testi(){
-        loadCursorToListClub(loadTableToCursor("Seura"));
-        System.out.println("Koko on " + listClub.size());
-
-        for (int i = 0; i <listClub.size(); i++) {
-            System.out.println(listClub.get(i).getName());
-        }
-    }
-    */
 
     public void loadCursorToListClub(Cursor cursor){
         if (cursor.moveToFirst()) {
@@ -133,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             do {
                 int bookerID = cursor.getInt(0);
                 int clubID = cursor.getInt(1);
-                //System.out.println("seuraid = " + bookerID);
+
                 listBooker.add(new Booker(bookerID, clubID));
             } while (cursor.moveToNext());
 
@@ -150,15 +126,10 @@ public class MainActivity extends AppCompatActivity {
     }
     public void loadCursorToListRoom(Cursor cursor){
 
-        //System.out.println(cursor.getColumnCount());
         if (cursor.moveToFirst()) {
-
             do {int roomID = cursor.getInt(0);
-            //System.out.println("SaliID: " +roomID);
                 int sportID = cursor.getInt(1);
-                //System.out.println("LajiID: " + sportID);
                 String name = cursor.getString(2);
-                //System.out.println("Lajinimi: " + name);
                 listRoom.add(new Room(roomID, sportID, name));
             } while (cursor.moveToNext());
 
@@ -166,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public void loadCursorToListEquipment(Cursor cursor){
         if (cursor.moveToFirst()) {
-
             do {int equipmentID = cursor.getInt(0);
                 int roomID = cursor.getInt(1);
                 String name = cursor.getString(2);
@@ -178,20 +148,30 @@ public class MainActivity extends AppCompatActivity {
     public void loadCursorToListBooking(Cursor cursor){
         if (cursor.moveToFirst()) {
 
-            //System.out.println(cursor.getCount());
             do {int bookingID = cursor.getInt(0);
-            //System.out.println("Varausid = " + bookingID);
                 int bookerID = cursor.getInt(1);
-                //System.out.println("varaajaid = " + bookerID);
                 int roomID = cursor.getInt(2);
-                //System.out.println("Saliid = " + roomID);
-                String startTime = cursor.getString(3);
-                //System.out.println("Alkuaika = " + startTime);
-                String endTime = cursor.getString(4);
-                //System.out.println("Loppuaika = " + endTime);
-                String date = cursor.getString(5);
-                //System.out.println("pvm = " + date);
-                listBooking.add(new Booking(bookingID, bookerID, roomID, startTime, endTime, date));
+                String startTimeString = cursor.getString(3);
+                String endTimeString = cursor.getString(4);
+                String dateString = cursor.getString(5);
+                String start = dateString+ "T" + startTimeString + "Z";
+                String end = dateString + "T" + endTimeString + "Z";
+
+                SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy'T'HH:mm'Z'");
+                try {
+
+                    java.util.Date dateStart =  format.parse(start);
+
+                    java.util.Date dateEnd = format.parse(end);
+
+
+                    listBooking.add(new Booking(bookingID, bookerID, roomID, dateStart, dateEnd));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (java.text.ParseException e) {
+                    e.printStackTrace();
+                }
+
             } while (cursor.moveToNext());
 
         }
@@ -224,9 +204,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
+    protected void onResume() { // Loads database to lists and writes json-file.
         super.onResume();
         loadDBtoArrayLists();
+
+        try {
+            DataBaseHelper dbHelper = new DataBaseHelper(this);
+            mDatabase = dbHelper.getWritableDatabase();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        WriteBookings writeBookings = new WriteBookings(listRoom, mDatabase);
+        try {
+            writeBookings.write();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -243,6 +238,8 @@ public class MainActivity extends AppCompatActivity {
         if (userExists) {
             Intent intent = getAllListIntents(MakeBooking.class);
             intent.putExtra("bookerID", bookerID);
+            intent.putExtra("index", -1); // nothing to do with makeing a new booking
+
             startActivityForResult(intent, 999);
         } else {
             Toast.makeText(MainActivity.this, "Luo käyttäjä ensin!", Toast.LENGTH_SHORT).show();
@@ -258,7 +255,9 @@ public class MainActivity extends AppCompatActivity {
     public void openEditBooking(){
         if (userExists) {
             Intent intent = getAllListIntents(EditBooking.class);
+            intent.putExtra("userExists", userExists);
             intent.putExtra("bookerID", bookerID);
+            System.out.println("BookkerID tässä on " +bookerID );
             startActivityForResult(intent, 999);
         } else {
             Toast.makeText(MainActivity.this, "Luo käyttäjä ensin!", Toast.LENGTH_SHORT).show();
@@ -319,35 +318,6 @@ public class MainActivity extends AppCompatActivity {
         loadCursorToListBooking(loadTableToCursor(BookingEntry.TABLE_NAME));
         loadCursorToListPerson(loadTableToCursor(PersonEntry.TABLE_NAME));
     }
-
-
-
-
-    /*public void write(){
-        String s = "SaiPa";
-        ContentValues cv = new ContentValues();
-        cv.put(BookingSystemContract.SeuraEntry.COLUMN_NIMI, s);
-        database.insert(BookingSystemContract.SeuraEntry.TABLE_NAME, null, cv);
-        System.out.println("Kirjoitettu");
-        }
-        */
-
-
-    /*
-    public void read() {
-        System.out.println("Luetaan");
-        Cursor cursor = database.rawQuery("SELECT * FROM " + BookingSystemContract.SeuraEntry.TABLE_NAME + ";", null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    String bookName = cursor.getString(cursor.getColumnIndex(BookingSystemContract.SeuraEntry.COLUMN_NIMI));
-                    String id = cursor.getString(cursor.getColumnIndex(BookingSystemContract.SeuraEntry.COLUMN_SEURAID));
-                    System.out.println(bookName + " " + id);
-                } while (cursor.moveToNext());
-            }
-        }
-    }
-*/
 
 };
 

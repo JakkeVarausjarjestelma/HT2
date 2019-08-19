@@ -127,7 +127,6 @@ public class CreateUser extends AppCompatActivity {
         cv.put(BookingSystemContract.BookerEntry.COLUMN_BOOKERID, id);
         cv.put(BookingSystemContract.BookerEntry.COLUMN_CLUBID, clubID);
         sqLiteDatabase.insert(BookingSystemContract.BookerEntry.TABLE_NAME, null, cv);
-        //listBooker.add(new Booker(id, clubID));
     }
 
 
@@ -137,7 +136,6 @@ public class CreateUser extends AppCompatActivity {
         cv.put(BookingSystemContract.PersonEntry.COLUMN_NAME, name);
         cv.put(BookingSystemContract.PersonEntry.COLUMN_PHONENUMBER, phonenumber);
         sqLiteDatabase.insert(BookingSystemContract.PersonEntry.TABLE_NAME, null, cv);
-        //listPerson.add(new Person(name, phonenumber, bookerID));
         userExists = true;
         textView.setText("Muokkaa käyttäjän tietoja");
         button.setText("Tee muutokset");
@@ -148,7 +146,6 @@ public class CreateUser extends AppCompatActivity {
     public void updateValuesToPerson(SQLiteDatabase sqLiteDatabase, String name, String phonenumber, int bookerID){
         ContentValues cv = new ContentValues();
         System.out.println("Päivitetään henkilö");
-        //cv.put(BookingSystemContract.PersonEntry.COLUMN_BOOKERID, bookerID);
         cv.put(BookingSystemContract.PersonEntry.COLUMN_NAME, name);
         cv.put(BookingSystemContract.PersonEntry.COLUMN_PHONENUMBER, phonenumber);
         sqLiteDatabase.update(BookingSystemContract.PersonEntry.TABLE_NAME, cv, BookingSystemContract.PersonEntry.COLUMN_BOOKERID + "="+bookerID, null);
@@ -174,7 +171,6 @@ public class CreateUser extends AppCompatActivity {
             for (int index = 0; index < listPerson.size(); index++){
                 int compare_bookerID = ((Person) listPerson.get(index)).getBookerID();
                 if (compare_bookerID == bookerID){
-                    System.out.println("MOPSJDpansdfö");
                     nametext.setText(((Person) listPerson.get(index)).getName(), TextView.BufferType.EDITABLE);
                     phonenumbertext.setText(((Person) listPerson.get(index)).getPhoneNumber(), TextView.BufferType.EDITABLE);
                 }
@@ -184,11 +180,9 @@ public class CreateUser extends AppCompatActivity {
     }
 
 
-
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra("testi", 555);
         intent.putExtra("userExists", userExists);
         if (userExists){
             intent.putExtra("bookerID", bookerID);

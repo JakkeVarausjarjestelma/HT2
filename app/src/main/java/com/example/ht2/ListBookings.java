@@ -22,9 +22,6 @@ import java.util.ArrayList;
 
 
 public class ListBookings extends AppCompatActivity {
-    DataBaseHelper dataBaseHelper;
-    Context context = null;
-    Button button;
     Button button8;
     private Button button6;
     private Button button10;
@@ -40,6 +37,7 @@ public class ListBookings extends AppCompatActivity {
     public ArrayList<Booking> listBooking;
     public ArrayList<Person> listPerson;
     private SQLiteDatabase db;
+    TextView myTextView;
 
 
 
@@ -59,8 +57,6 @@ public class ListBookings extends AppCompatActivity {
         }
         setContentView(R.layout.activity_list_bookings);
 
-
-
         button6 = findViewById(R.id.button6);
         button8 = findViewById(R.id.button8);
         button10 = findViewById(R.id.button10);
@@ -69,8 +65,6 @@ public class ListBookings extends AppCompatActivity {
         spinner = findViewById(R.id.equipmentSpinner);
         spinner2 = findViewById(R.id.spinner2);
         spinner3 = findViewById(R.id.spinner3);
-
-
 
         Intent intent = getIntent();
         listClub = intent.getParcelableArrayListExtra("Club");
@@ -93,7 +87,6 @@ public class ListBookings extends AppCompatActivity {
             }
         });
 
-
         button8.setOnClickListener(new OnClickListener() {
 
             //Search by Sport
@@ -107,8 +100,6 @@ public class ListBookings extends AppCompatActivity {
             }
         });
 
-
-
         button10.setOnClickListener(new OnClickListener() {
 
 
@@ -121,32 +112,16 @@ public class ListBookings extends AppCompatActivity {
             }
         });
 
+        myTextView = (TextView)findViewById(R.id.textView5);
+        myTextView.setText("");
 
-
-
-
-      /*testButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //System.out.println(listClub.size());
-            }
-        });
-       */
-
-
-
-
-
-        final TextView tv =  findViewById(R.id.tv);
+        TextView tv =  findViewById(R.id.tv);
         tv.setTextColor(Color.parseColor("#EC7469"));
-
 
         ArrayAdapter<Club> adapter = new ArrayAdapter<Club>(this, android.R.layout.simple_spinner_item, listClub);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        //@Override
-        //public void onItemSelected(AdapterView<?> parent, View view, int position, long Club club = (Club) parent.getSelectedItem();
 
         ArrayAdapter<Sport> adapter2 = new ArrayAdapter<Sport>(this, android.R.layout.simple_spinner_item, listSport);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -165,12 +140,8 @@ public class ListBookings extends AppCompatActivity {
     }
 
     private void searchByPerson(int personid) {
-
-
-
         String s = "SELECT Varaus.Päivämäärä, Varaus.Aloitusaika, Varaus.Lopetusaika, Sali.Nimi  FROM Varaus INNER JOIN Varaaja ON Varaus.VaraajaID = Varaaja.VaraajaID INNER JOIN Sali ON Varaus.SaliID = Sali.SaliID  WHERE Varaaja.VaraajaID = "+personid+";";
         System.out.println(s);
-        // String s = "SELECT * FROM Varaus WHERE VaraajaID  = ?";
 
         Cursor c = db.rawQuery(s, null);
         String v =  "Päivämäärä:      " +  "Aloitusaika:        " + "Lopetusaika:       " + "Sali:       " + "\n";
@@ -178,7 +149,6 @@ public class ListBookings extends AppCompatActivity {
         if (c.moveToFirst()) {
             do {
                 System.out.println("asdfegea");
-                //Toast.makeText(ListBookings.this, "id: " + c.getString(0) + "\n" + "Nimi: " + c.getString(1), Toast.LENGTH_SHORT).show();
                 v = v   + c.getString(0) + "            "  + c.getString(1) +"                  " + c.getString(2) + "                   " + c.getString(3) + "\n";
 
             } while (c.moveToNext());
@@ -186,12 +156,8 @@ public class ListBookings extends AppCompatActivity {
 
         } else { Toast.makeText(ListBookings.this, "Ei varauksia tällä haulla!", Toast.LENGTH_SHORT).show();}
 
-        TextView myTextView = (TextView)findViewById(R.id.textView5);
         myTextView.setText(v);
 
-        // TextView textView = findViewById(R.id.textView5);
-
-        //textView.setText((CharSequence) c);
         c.close();
 
 
@@ -199,12 +165,7 @@ public class ListBookings extends AppCompatActivity {
 
 
     private void searchBySport(int sportid) {
-        //String s = "SELECT * FROM Varaus WHERE LajiID  = ?";
-        //Cursor c = db.rawQuery(s, new String[] {String.valueOf(sportid)});
 
-        //TextView textView = findViewById(R.id.textView5);
-
-        //textView.setText((CharSequence) c);
         String s = "SELECT Varaus.Päivämäärä, Varaus.Aloitusaika, Varaus.Lopetusaika, Sali.Nimi  FROM Varaus INNER JOIN Sali ON Varaus.SaliID = Sali.SaliID INNER JOIN Lajivalinta ON Sali.LajiID = Lajivalinta.LajiID  WHERE Lajivalinta.LajiID = "+sportid+";";
         System.out.println(s);
 
@@ -214,8 +175,6 @@ public class ListBookings extends AppCompatActivity {
 
         if (c.moveToFirst()) {
             do {
-                System.out.println("asdfegea");
-                //Toast.makeText(ListBookings.this, "id: " + c.getString(0) + "\n" + "Nimi: " + c.getString(1), Toast.LENGTH_SHORT).show();
                 v = v   + c.getString(0) + "            "  + c.getString(1) +"                  " + c.getString(2) + "                   " + c.getString(3) + "\n";
 
             } while (c.moveToNext());
@@ -223,12 +182,8 @@ public class ListBookings extends AppCompatActivity {
 
         } else { Toast.makeText(ListBookings.this, "Ei varauksia tällä haulla!", Toast.LENGTH_SHORT).show();}
 
-        TextView myTextView = (TextView)findViewById(R.id.textView5);
         myTextView.setText(v);
 
-        // TextView textView = findViewById(R.id.textView5);
-
-        //textView.setText((CharSequence) c);
         c.close();
 
 
@@ -240,15 +195,13 @@ public class ListBookings extends AppCompatActivity {
     public void searchByClub(int clubid){
         String s = "SELECT Varaus.Päivämäärä, Varaus.Aloitusaika, Varaus.Lopetusaika, Sali.Nimi  FROM Varaus INNER JOIN Varaaja ON Varaus.VaraajaID = Varaaja.VaraajaID INNER JOIN Seura ON Varaaja.SeuraID = Seura.SeuraID INNER JOIN Sali ON Varaus.SaliID = Sali.SaliID  WHERE Seura.SeuraID = "+clubid+";";
         System.out.println(s);
-        // String s = "SELECT * FROM Varaus WHERE VaraajaID  = ?";
 
         Cursor c = db.rawQuery(s, null);
         String v =  "Päivämäärä:      " +  "Aloitusaika:        " + "Lopetusaika:       " + "Sali:       " + "\n";
 
         if (c.moveToFirst()) {
             do {
-                System.out.println("asdfegea");
-                //Toast.makeText(ListBookings.this, "id: " + c.getString(0) + "\n" + "Nimi: " + c.getString(1), Toast.LENGTH_SHORT).show();
+
                 v = v   + c.getString(0) + "            "  + c.getString(1) +"                  " + c.getString(2) + "                   " + c.getString(3) + "\n";
 
             } while (c.moveToNext());
@@ -256,12 +209,10 @@ public class ListBookings extends AppCompatActivity {
 
         } else { Toast.makeText(ListBookings.this, "Ei varauksia tällä haulla!", Toast.LENGTH_SHORT).show();}
 
-        TextView myTextView = (TextView)findViewById(R.id.textView5);
+
         myTextView.setText(v);
 
-        // TextView textView = findViewById(R.id.textView5);
 
-        //textView.setText((CharSequence) c);
         c.close();
 
     }}

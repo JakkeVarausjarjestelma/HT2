@@ -3,24 +3,21 @@ package com.example.ht2;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.util.Date;
 
 public class Booking implements Parcelable {
     private int bookingID;
     private int bookerID;
     private int roomID;
-    private String startTime;
-    private String endTime;
-    private String date;
+    private Date startTime;
+    private Date endTime;
 
     protected Booking(Parcel in) {
         bookingID = in.readInt();
         bookerID = in.readInt();
         roomID = in.readInt();
-        startTime = in.readString();
-        endTime = in.readString();
-        date = in.readString();
+        startTime = (Date) in.readSerializable();
+        endTime = (Date) in.readSerializable();
     }
 
     public static final Creator<Booking> CREATOR = new Creator<Booking>() {
@@ -59,37 +56,30 @@ public class Booking implements Parcelable {
         this.roomID = roomID;
     }
 
-    public String getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(String startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public String getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(String endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
-    public String getDate() {
-        return date;
-    }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public Booking(int bookingID, int bookerID, int roomID, String startTime, String endTime, String date) {
+    public Booking(int bookingID, int bookerID, int roomID, Date startTime, Date endTime) {
         this.roomID = roomID;
         this.bookingID = bookingID;
         this.bookerID = bookerID;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.date = date;
+
 
     }
 
@@ -104,8 +94,7 @@ public class Booking implements Parcelable {
         parcel.writeInt(bookingID);
         parcel.writeInt(bookerID);
         parcel.writeInt(roomID);
-        parcel.writeString(startTime);
-        parcel.writeString(endTime);
-        parcel.writeString(date);
+        parcel.writeSerializable(startTime);
+        parcel.writeSerializable(endTime);
     }
 }
