@@ -1,0 +1,55 @@
+
+SELECT * FROM "Sali"
+    INNER JOIN "Varaus" ON "Sali"."SaliID" = "Varaus"."SaliID";
+
+
+SELECT * FROM "Lajivalinta"
+     INNER JOIN "Sali" ON "Lajivalinta"."LajiID" = "Sali"."LajiID";
+
+SELECT * FROM "Välineet";
+
+
+SELECT * FROM Lajivalinta;
+
+SELECT * FROM Lajivalinta
+     INNER JOIN "Sali" ON "Lajivalinta"."LajiID" = "Sali"."LajiID"
+     WHERE "Lajivalinta"."Nimi" = 'Tennis';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
